@@ -26,6 +26,9 @@ bld/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+# ANTLR
+*.g4*
+
 #NUNIT
 *.VisualState.xml
 TestResult.xml
