@@ -27,7 +27,7 @@ bld/
 [Bb]uild[Ll]og.*
 
 # ANTLR
-*.g4*
+*.g4.*
 
 #NUNIT
 *.VisualState.xml
