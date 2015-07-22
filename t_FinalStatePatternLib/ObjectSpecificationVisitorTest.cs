@@ -1,6 +1,4 @@
-﻿using Antlr4.Runtime;
-using FinalStatePatternLib;
-using FinalStatePatternLib.Visitors;
+﻿using FinalStatePatternLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -13,51 +11,31 @@ namespace t_FinalStatePatternLib
         /// Test a name object with no restrictions (e.g. just a definition).
         /// </summary>
         [TestMethod]
-        public void TestMethod1()
+        public void SingleName()
         {
-            var text = "J1";
+            var text = "J1;";
+            var dfs = text.Parse();
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual("J1", dfs.FinalStateObjects[0].Name);
+            Assert.IsNull(dfs.FinalStateObjects[0].BaseDefinition);
         }
 
         [TestMethod]
-        public void SimpleCut()
+        public void NameWithBase()
         {
-            var text = "J1 : cut;";
-
-            var input = new AntlrInputStream(text);
-            var lexer = new FinalStatePatternLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            var parser = new FinalStatePatternParser(tokens);
-            var listener = new errorListener();
-            parser.AddErrorListener(listener);
-
-            var tree = parser.top_level();
-            listener.Check();
-
-            var result = new ObjectSpecificationVisitor().Visit(tree);
-            Assert.IsNotNull(result);
-            Console.WriteLine("  -> Result: {0}", result);
+            var text = "J1 (atlas-anti-kt4);";
+            var dfs = text.Parse();
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual("J1", dfs.FinalStateObjects[0].Name);
+            Assert.AreEqual("atlas-anti-kt4", dfs.FinalStateObjects[0].BaseDefinition);
         }
 
-        class errorListener : IAntlrErrorListener<IToken>
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void NameWithTwoBase()
         {
-            public bool SeenError = false;
-            string Message = "";
-
-            public void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
-            {
-                Console.WriteLine("Error: {0}", msg);
-                SeenError = true;
-                Message += string.Format("--> {0}\n", msg);
-            }
-
-            public void Check()
-            {
-                if (SeenError)
-                {
-                    Assert.Fail(Message);
-                }
-            }
+            var text = "J1(atlas1); J1(atlas2);";
+            var dfs = text.Parse();
         }
-
     }
 }
