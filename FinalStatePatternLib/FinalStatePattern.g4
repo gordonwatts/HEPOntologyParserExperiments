@@ -31,8 +31,8 @@ cut_list
     ;
 
 cut
-    : cut_arg BINARY_OP cut_arg
-	| cut_number BINARY_OP cut_name BINARY_OP cut_number
+    : cut_arg BINARY_OP cut_arg								# CutBinary
+	| cut_number BINARY_OP cut_name BINARY_OP cut_number	# CutRange
     ;
 
 cut_arg

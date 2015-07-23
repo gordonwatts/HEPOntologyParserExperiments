@@ -75,6 +75,7 @@ namespace FinalStatePatternLib
         {
             var result = new DetectorFinalState();
             result.FinalStateObjects.AddRange(parsedState.FSOs);
+            result.Criteria.Arguments.AddRange(parsedState.TopLevelCriteria);
 
             return result;
         }

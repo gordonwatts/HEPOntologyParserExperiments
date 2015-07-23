@@ -13,11 +13,17 @@ namespace FinalStatePatternLib.OWLData
         public List<FinalStateObject> FinalStateObjects { get; private set; }
 
         /// <summary>
+        /// All the criteria that need to be satisfied for this DFS.
+        /// </summary>
+        public ANDOR Criteria { get; private set; }
+
+        /// <summary>
         /// Basic ctor
         /// </summary>
         public DetectorFinalState()
         {
             FinalStateObjects = new List<FinalStateObject>();
+            Criteria = new ANDOR() { AOType = ANDORType.kAnd };
         }
     }
 }

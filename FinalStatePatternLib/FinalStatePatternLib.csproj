@@ -45,8 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Listeners\FinalStatePatternListener.cs" />
+    <Compile Include="OWLData\ANDOR.cs" />
     <Compile Include="OWLData\DetectorFinalState.cs" />
     <Compile Include="OWLData\FinalStateObject.cs" />
+    <Compile Include="OWLData\IValueBase.cs" />
+    <Compile Include="OWLData\PhysicalQuantity.cs" />
+    <Compile Include="OWLData\PhysicalValue.cs" />
+    <Compile Include="OWLData\SelectionCriteria.cs" />
+    <Compile Include="OWLData\ISelectionCriteriaBase.cs" />
     <Compile Include="SemanticData\ObjectSpecification.cs" />
     <Compile Include="ParseFinalStatePattern.cs" />
     <Compile Include="FinalStatePattern.g4.lexer.cs">
