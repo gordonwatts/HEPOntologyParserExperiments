@@ -151,7 +151,7 @@ namespace t_FinalStatePatternLib
             var text = "J1(atlas-anti-kt4): pT > 50 GeV; 60 GeV < J1.pT < 100 GeV;";
             var dfs = text.Parse();
 
-            Assert.Inconclusive();
+            Assert.AreEqual(3, dfs.Criteria.Arguments.Count);
         }
 
         [TestMethod]
