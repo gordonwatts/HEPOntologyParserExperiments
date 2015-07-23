@@ -10,7 +10,12 @@ top_level
 
 line_needing_eof
     : object_specification
+	| standalone_cut
     ;
+
+standalone_cut
+	: self_ref_cut
+	;
 
 object_specification
 	: object_name							# ObjectSpecNameOnly
@@ -32,7 +37,7 @@ self_ref_cut_list
 
 self_ref_cut
     : self_ref_cut_arg BINARY_OP self_ref_cut_arg								# CutBinary
-	| cut_number BINARY_OP self_ref_cut_name BINARY_OP cut_number	# CutRange
+	| cut_number BINARY_OP self_ref_cut_name BINARY_OP cut_number				# CutRange
     ;
 
 self_ref_cut_arg
@@ -42,6 +47,7 @@ self_ref_cut_arg
 
 self_ref_cut_name
 	: NAME
+	| object_name '.' NAME
 	;
 
 cut_number

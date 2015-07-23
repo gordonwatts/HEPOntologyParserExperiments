@@ -121,5 +121,53 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("GeV", pv1.Unit);
             Assert.AreEqual("GeV", pv2.Unit);
         }
+
+        [TestMethod]
+        public void SingleCutWithDefinedName()
+        {
+            var text = "J1(atlas-anti-kt4): pT > 50 GeV; J1.pT < 100 GeV;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(2, dfs.Criteria.Arguments.Count);
+
+            Assert.IsInstanceOfType(dfs.Criteria.Arguments[1], typeof(SelectionCriteria));
+            var a2 = dfs.Criteria.Arguments[1] as SelectionCriteria;
+
+            Assert.IsInstanceOfType(a2.FirstArgument, typeof(SinglePhysicalQuantity));
+            Assert.IsInstanceOfType(a2.SecondArgument, typeof(PhysicalValue));
+            var spq = a2.FirstArgument as SinglePhysicalQuantity;
+            var pv = a2.SecondArgument as PhysicalValue;
+
+            Assert.AreEqual("<", a2.BinaryRelation);
+            Assert.AreEqual("J1", spq.RefersToObject);
+            Assert.AreEqual("pT", spq.PhysicalQantity);
+            Assert.AreEqual(100.0, pv.Number);
+            Assert.AreEqual("GeV", pv.Unit);
+        }
+
+        [TestMethod]
+        public void RangeCutWithDefinedName()
+        {
+            var text = "J1(atlas-anti-kt4): pT > 50 GeV; 60 GeV < J1.pT < 100 GeV;";
+            var dfs = text.Parse();
+
+            Assert.Inconclusive();
+        }
+
+        [TestMethod]
+        public void NameInSingleCutList()
+        {
+            var text = "ETMiss(atlas-met) < 50 GeV;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            Assert.AreEqual("ETMiss", dfs.FinalStateObjects[0].Name);
+            Assert.AreEqual("atlas-met", dfs.FinalStateObjects[0].BaseDefinition);
+
+            Assert.AreEqual("<", (dfs.Criteria.Arguments[0] as SelectionCriteria).BinaryRelation);
+            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
+        }
     }
 }

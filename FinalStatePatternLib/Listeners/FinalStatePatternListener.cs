@@ -34,7 +34,7 @@ namespace FinalStatePatternLib.Listeners
         /// <param name="context"></param>
         public override void ExitObjectSpecNameOnly(FinalStatePatternParser.ObjectSpecNameOnlyContext context)
         {
-            ExtractFSO(context.object_name());
+            Convert(context.object_name());
 
             // Go on to what we were doing previously.
             base.ExitObjectSpecNameOnly(context);
@@ -50,7 +50,7 @@ namespace FinalStatePatternLib.Listeners
         public override void EnterObjectSpecNameAndCutList(FinalStatePatternParser.ObjectSpecNameAndCutListContext context)
         {
             // Cache the FSO for processing
-            _current_fso = ExtractFSO(context.object_name());
+            _current_fso = Convert(context.object_name());
             _current_criteria = new List<ISelectionCriteriaBase>();
 
             base.EnterObjectSpecNameAndCutList(context);
@@ -66,13 +66,51 @@ namespace FinalStatePatternLib.Listeners
 
             TopLevelCriteria.AddRange(_current_criteria);
             _current_criteria = null;
+
+            // Any downlevel processing.
+            base.ExitObjectSpecNameAndCutList(context);
+        }
+
+        /// <summary>
+        /// We are doing a stand alone cut on a single line; get things setup to track what happens on exit.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void EnterStandalone_cut(FinalStatePatternParser.Standalone_cutContext context)
+        {
+            _current_fso = null; // Should already be the case!
+            _current_criteria = new List<ISelectionCriteriaBase>();
+
+            // Do the rest.
+            base.EnterStandalone_cut(context);
+        }
+
+        /// <summary>
+        /// Done processing the cuts, put them into our criteria list.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitStandalone_cut(FinalStatePatternParser.Standalone_cutContext context)
+        {
+            TopLevelCriteria.AddRange(_current_criteria);
+            _current_criteria = null;
+
+            // Continue.
+            base.ExitStandalone_cut(context);
+        }
+
+        /// <summary>
+        /// Type type of FSO reference we are converting. In one case, if it is defined twice, it must be the same!
+        /// </summary>
+        enum AllowedFSODefinitionReference
+        {
+            kAsDefinitionOnly,
+            kAsDefinitionOrReference
         }
 
         /// <summary>
         /// Given an object name context, extract a FSO.
         /// </summary>
         /// <param name="objNameContext"></param>
-        private FinalStateObject ExtractFSO(FinalStatePatternParser.Object_nameContext objNameContext)
+        private FinalStateObject Convert(FinalStatePatternParser.Object_nameContext objNameContext, AllowedFSODefinitionReference refType = AllowedFSODefinitionReference.kAsDefinitionOnly)
         {
             var fso_name = objNameContext.NAME().GetText();
 
@@ -85,7 +123,7 @@ namespace FinalStatePatternLib.Listeners
             var oldFSO = FSOs.Where(f => f.Name == fso_name).FirstOrDefault();
             if (oldFSO != null)
             {
-                if (oldFSO.BaseDefinition != fso_base_definition)
+                if (refType == AllowedFSODefinitionReference.kAsDefinitionOnly && oldFSO.BaseDefinition != fso_base_definition)
                 {
                     throw new ArgumentOutOfRangeException(string.Format("Object {0} was defined with two base definitions ({1} and {2})", fso_name, fso_base_definition, oldFSO.BaseDefinition));
                 }
@@ -167,10 +205,21 @@ namespace FinalStatePatternLib.Listeners
         /// <returns></returns>
         private IValueBase Convert(FinalStatePatternParser.Self_ref_cut_nameContext func)
         {
+            var fso = _current_fso;
+            if (func.object_name() != null)
+            {
+                fso = Convert(func.object_name(), AllowedFSODefinitionReference.kAsDefinitionOrReference);
+            }
+
+            if (fso == null)
+            {
+                throw new ArgumentException(string.Format("Unable to figure out what object this value is refering to: {0}", func.NAME().GetText()));
+            }
+
             return new SinglePhysicalQuantity()
             {
                 PhysicalQantity = func.NAME().GetText(),
-                RefersToObject = _current_fso.Name
+                RefersToObject = fso.Name
             };
         }
 
