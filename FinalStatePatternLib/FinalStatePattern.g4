@@ -14,12 +14,12 @@ line_needing_eof
     ;
 
 standalone_cut
-	: self_ref_cut
+	: cut
 	;
 
 object_specification
-	: object_name							# ObjectSpecNameOnly
-    | object_name COLON self_ref_cut_list	# ObjectSpecNameAndCutList
+	: object_name						# ObjectSpecNameOnly
+    | object_name COLON cut_list		# ObjectSpecNameAndCutList
     ;
 
 object_name
@@ -31,21 +31,21 @@ base_definition
 	: NAME
 	;
 
-self_ref_cut_list
-    : self_ref_cut (',' self_ref_cut)*
+cut_list
+    : cut (',' cut)*
     ;
 
-self_ref_cut
-    : self_ref_cut_arg BINARY_OP self_ref_cut_arg								# CutBinary
-	| cut_number BINARY_OP self_ref_cut_name BINARY_OP cut_number				# CutRange
+cut
+    : cut_arg BINARY_OP cut_arg								# CutBinary
+	| cut_number BINARY_OP cut_name BINARY_OP cut_number	# CutRange
     ;
 
-self_ref_cut_arg
+cut_arg
 	: cut_number
-	| self_ref_cut_name
+	| cut_name
 	;
 
-self_ref_cut_name
+cut_name
 	: NAME
 	| object_name '.' NAME
 	;
