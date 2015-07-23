@@ -107,8 +107,8 @@ namespace FinalStatePatternLib.Listeners
         {
             var c = new SelectionCriteria();
             c.BinaryRelation = context.BINARY_OP().GetText();
-            c.FirstArgument = Convert(context.cut_arg()[0]);
-            c.SecondArgument = Convert(context.cut_arg()[1]);
+            c.FirstArgument = Convert(context.self_ref_cut_arg()[0]);
+            c.SecondArgument = Convert(context.self_ref_cut_arg()[1]);
             _current_criteria.Add(c);
 
             // And off we go
@@ -128,9 +128,9 @@ namespace FinalStatePatternLib.Listeners
             c2.BinaryRelation = context.BINARY_OP(1).GetText();
 
             c1.FirstArgument = Convert(context.cut_number(0));
-            c1.SecondArgument = Convert(context.cut_name());
+            c1.SecondArgument = Convert(context.self_ref_cut_name());
 
-            c2.FirstArgument = Convert(context.cut_name());
+            c2.FirstArgument = Convert(context.self_ref_cut_name());
             c2.SecondArgument = Convert(context.cut_number(1));
 
             _current_criteria.Add(c1);
@@ -144,11 +144,11 @@ namespace FinalStatePatternLib.Listeners
         /// </summary>
         /// <param name="cut_argContext"></param>
         /// <returns></returns>
-        private IValueBase Convert(FinalStatePatternParser.Cut_argContext cut_argContext)
+        private IValueBase Convert(FinalStatePatternParser.Self_ref_cut_argContext cut_argContext)
         {
-            if (cut_argContext.cut_name() != null)
+            if (cut_argContext.self_ref_cut_name() != null)
             {
-                return Convert(cut_argContext.cut_name());
+                return Convert(cut_argContext.self_ref_cut_name());
             }
             else if (cut_argContext.cut_number() != null)
             {
@@ -165,7 +165,7 @@ namespace FinalStatePatternLib.Listeners
         /// </summary>
         /// <param name="func"></param>
         /// <returns></returns>
-        private IValueBase Convert(FinalStatePatternParser.Cut_nameContext func)
+        private IValueBase Convert(FinalStatePatternParser.Self_ref_cut_nameContext func)
         {
             return new SinglePhysicalQuantity()
             {
