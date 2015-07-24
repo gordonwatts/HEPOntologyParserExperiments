@@ -157,7 +157,7 @@ namespace t_FinalStatePatternLib
         [TestMethod]
         public void NameInSingleCutList()
         {
-            var text = "ETMiss(atlas-met) < 50 GeV;";
+            var text = "ETMiss(atlas-met).ET < 50 GeV;";
             var dfs = text.Parse();
 
             Assert.AreEqual(1, dfs.FinalStateObjects.Count);
@@ -167,7 +167,8 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("atlas-met", dfs.FinalStateObjects[0].BaseDefinition);
 
             Assert.AreEqual("<", (dfs.Criteria.Arguments[0] as SelectionCriteria).BinaryRelation);
-            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
+            Assert.AreEqual("ET", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
+            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
         }
     }
 }
