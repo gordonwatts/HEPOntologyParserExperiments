@@ -6,7 +6,7 @@ namespace FinalStatePatternLib.OWLData
         /// <summary>
         /// Get/Set the name of the object that this guy refers to
         /// </summary>
-        public string RefersToObject;
+        public FinalStateObject RefersToObject;
 
         /// <summary>
         /// What about the object (pT, eta, etc.)

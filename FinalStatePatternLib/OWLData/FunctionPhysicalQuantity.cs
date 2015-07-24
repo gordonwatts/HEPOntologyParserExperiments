@@ -5,7 +5,7 @@ namespace FinalStatePatternLib.OWLData
     {
         public string Name;
         public string ArgumentList;
-        public string[] RefersToObjects;
+        public FinalStateObject[] RefersToObjects;
 
         public override string ToString()
         {

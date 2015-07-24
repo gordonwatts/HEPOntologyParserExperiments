@@ -276,7 +276,7 @@ namespace FinalStatePatternLib.Listeners
             return new SinglePhysicalQuantity()
             {
                 PhysicalQantity = name,
-                RefersToObject = fso.Name
+                RefersToObject = fso
             };
         }
 
@@ -301,13 +301,17 @@ namespace FinalStatePatternLib.Listeners
         /// <returns></returns>
         private IValueBase Convert(FinalStatePatternParser.FunctionContext functionContext)
         {
-            var allObjects =
+            // All the arguments are either on the stack as selection criteria or burried deep.
+            var allObjectsInContext =
                 functionContext.function_arg()
                 .SelectMany(fa => ExtractFSOReferences(fa));
-            var seenObjectNames = new HashSet<string>();
-            foreach (var anObject in allObjects)
+            var allObjectsOnStack =
+                _current_criteria.Peek()
+                .SelectMany(fa => ExtractFSOReferences(fa));
+            var seenObjectNames = new HashSet<FinalStateObject>();
+            foreach (var anObject in allObjectsInContext.Concat(allObjectsOnStack))
             {
-                seenObjectNames.Add(anObject.Name);
+                seenObjectNames.Add(anObject);
             }
 
             var textItems =
@@ -439,8 +443,7 @@ namespace FinalStatePatternLib.Listeners
         /// <returns></returns>
         private IEnumerable<FinalStateObject> ExtractFSOReferences(FunctionPhysicalQuantity functionPhysicalQuantity)
         {
-            return functionPhysicalQuantity.RefersToObjects
-                .Select(o => FSOs.Where(fs => fs.Name == o).First());
+            return functionPhysicalQuantity.RefersToObjects;
         }
 
         /// <summary>
@@ -451,7 +454,7 @@ namespace FinalStatePatternLib.Listeners
         private IEnumerable<FinalStateObject> ExtractFSOReferences(SinglePhysicalQuantity singlePhysicalQuantity)
         {
             if (singlePhysicalQuantity.RefersToObject != null)
-                return FSOs.Where(fs => fs.Name == singlePhysicalQuantity.RefersToObject);
+                return new FinalStateObject[] { singlePhysicalQuantity.RefersToObject };
             return Enumerable.Empty<FinalStateObject>();
         }
 

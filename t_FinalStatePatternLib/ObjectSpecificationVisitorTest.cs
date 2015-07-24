@@ -59,7 +59,7 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual(30.0, pv.Number);
             Assert.AreEqual("GeV", pv.Unit);
 
-            Assert.AreEqual("J1", spq.RefersToObject);
+            Assert.AreEqual("J1", spq.RefersToObject.Name);
             Assert.AreEqual("pT", spq.PhysicalQantity);
         }
 
@@ -88,8 +88,8 @@ namespace t_FinalStatePatternLib
             var spq1 = a1.FirstArgument as SinglePhysicalQuantity;
             var spq2 = a2.FirstArgument as SinglePhysicalQuantity;
 
-            Assert.AreEqual("J1", spq1.RefersToObject);
-            Assert.AreEqual("J1", spq2.RefersToObject);
+            Assert.AreEqual("J1", spq1.RefersToObject.Name);
+            Assert.AreEqual("J1", spq2.RefersToObject.Name);
             Assert.AreEqual("pT", spq1.PhysicalQantity);
             Assert.AreEqual("absEta", spq2.PhysicalQantity);
         }
@@ -108,8 +108,8 @@ namespace t_FinalStatePatternLib
             var spq1 = a1.SecondArgument as SinglePhysicalQuantity;
             var spq2 = a2.FirstArgument as SinglePhysicalQuantity;
 
-            Assert.AreEqual("J1", spq1.RefersToObject);
-            Assert.AreEqual("J1", spq2.RefersToObject);
+            Assert.AreEqual("J1", spq1.RefersToObject.Name);
+            Assert.AreEqual("J1", spq2.RefersToObject.Name);
             Assert.AreEqual("pT", spq1.PhysicalQantity);
             Assert.AreEqual("pT", spq2.PhysicalQantity);
 
@@ -139,7 +139,7 @@ namespace t_FinalStatePatternLib
             var pv = a2.SecondArgument as PhysicalValue;
 
             Assert.AreEqual("<", a2.BinaryRelation);
-            Assert.AreEqual("J1", spq.RefersToObject);
+            Assert.AreEqual("J1", spq.RefersToObject.Name);
             Assert.AreEqual("pT", spq.PhysicalQantity);
             Assert.AreEqual(100.0, pv.Number);
             Assert.AreEqual("GeV", pv.Unit);
@@ -168,7 +168,7 @@ namespace t_FinalStatePatternLib
 
             Assert.AreEqual("<", (dfs.Criteria.Arguments[0] as SelectionCriteria).BinaryRelation);
             Assert.AreEqual("ET", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
-            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
+            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject.Name);
         }
 
         [TestMethod]
@@ -187,7 +187,7 @@ namespace t_FinalStatePatternLib
 
             // TODO: May be we want some sort of built-in alias mechanism, so this becomes ET or something like that.
             Assert.AreEqual("", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
-            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
+            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject.Name);
         }
 
         [TestMethod]
@@ -227,7 +227,8 @@ namespace t_FinalStatePatternLib
             var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
             Assert.AreEqual("NTrack", f1.Name);
             Assert.AreEqual("pT>0", f1.ArgumentList);
-            Assert.AreEqual(0, f1.RefersToObjects.Length);
+            Assert.AreEqual(1, f1.RefersToObjects.Length);
+            Assert.AreEqual("FuncArgNTrack", f1.RefersToObjects[0].Name);
         }
 
         // TODO: NTrack(J2) is also an object definition, and the grammar can't
@@ -250,7 +251,7 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("NTrack", f1.Name);
             Assert.AreEqual("J2, J2", f1.ArgumentList);
             Assert.AreEqual(1, f1.RefersToObjects.Length);
-            Assert.AreEqual("J2", f1.RefersToObjects[0]);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
         }
 
         [TestMethod]
@@ -271,8 +272,8 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("NTrack", f1.Name);
             Assert.AreEqual("J2, J1", f1.ArgumentList);
             Assert.AreEqual(2, f1.RefersToObjects.Length);
-            Assert.AreEqual("J2", f1.RefersToObjects[0]);
-            Assert.AreEqual("J1", f1.RefersToObjects[1]);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
+            Assert.AreEqual("J1", f1.RefersToObjects[1].Name);
         }
 
         [TestMethod]
@@ -293,7 +294,7 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("NTrack", f1.Name);
             Assert.AreEqual("J2.pT>10GeV", f1.ArgumentList);
             Assert.AreEqual(1, f1.RefersToObjects.Length);
-            Assert.AreEqual("J2", f1.RefersToObjects[0]);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
         }
 
         [TestMethod]
@@ -314,8 +315,8 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("NTrack", f1.Name);
             Assert.AreEqual("J2.pT>10GeV, J1.ET>20GeV", f1.ArgumentList);
             Assert.AreEqual(2, f1.RefersToObjects.Length);
-            Assert.AreEqual("J2", f1.RefersToObjects[0]);
-            Assert.AreEqual("J1", f1.RefersToObjects[1]);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
+            Assert.AreEqual("J1", f1.RefersToObjects[1].Name);
         }
 
         [TestMethod]
@@ -326,7 +327,12 @@ namespace t_FinalStatePatternLib
 
             Assert.AreEqual(1, dfs.FinalStateObjects.Count);
             Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
-            Assert.Inconclusive();
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+
+            Assert.AreEqual(1, f1.RefersToObjects.Length);
+            Assert.AreEqual("FuncArgNTrack", f1.RefersToObjects[0].Name);
         }
 
         [TestMethod]
