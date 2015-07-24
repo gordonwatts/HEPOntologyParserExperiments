@@ -41,7 +41,7 @@ namespace FinalStatePatternLib.Listeners
         }
 
         private FinalStateObject _current_fso = null;
-        private List<ISelectionCriteriaBase> _current_criteria = null;
+        private Stack<List<ISelectionCriteriaBase>> _current_criteria = new Stack<List<ISelectionCriteriaBase>>();
 
         /// <summary>
         /// Get ready to run by all the cuts that are listed on the command line.
@@ -51,7 +51,7 @@ namespace FinalStatePatternLib.Listeners
         {
             // Cache the FSO for processing
             _current_fso = Convert(context.object_name());
-            _current_criteria = new List<ISelectionCriteriaBase>();
+            _current_criteria.Push(new List<ISelectionCriteriaBase>());
 
             base.EnterObjectSpecNameAndCutList(context);
         }
@@ -64,8 +64,7 @@ namespace FinalStatePatternLib.Listeners
         {
             // Pull the selection criteria out
 
-            TopLevelCriteria.AddRange(_current_criteria);
-            _current_criteria = null;
+            TopLevelCriteria.AddRange(_current_criteria.Pop());
 
             // Any downlevel processing.
             base.ExitObjectSpecNameAndCutList(context);
@@ -78,7 +77,7 @@ namespace FinalStatePatternLib.Listeners
         public override void EnterStandalone_cut(FinalStatePatternParser.Standalone_cutContext context)
         {
             _current_fso = null; // Should already be the case!
-            _current_criteria = new List<ISelectionCriteriaBase>();
+            _current_criteria.Push(new List<ISelectionCriteriaBase>());
 
             // Do the rest.
             base.EnterStandalone_cut(context);
@@ -90,11 +89,114 @@ namespace FinalStatePatternLib.Listeners
         /// <param name="context"></param>
         public override void ExitStandalone_cut(FinalStatePatternParser.Standalone_cutContext context)
         {
-            TopLevelCriteria.AddRange(_current_criteria);
-            _current_criteria = null;
+            TopLevelCriteria.AddRange(_current_criteria.Pop());
 
             // Continue.
             base.ExitStandalone_cut(context);
+        }
+
+        /// <summary>
+        /// We see a binary cut, so put it on the list.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitCutBinary(FinalStatePatternParser.CutBinaryContext context)
+        {
+            // If we are processing an argument, it isn't a criteria
+            var c = Convert(context);
+            _current_criteria.Peek().Add(c);
+
+            // And off we go
+            base.ExitCutBinary(context);
+        }
+
+        private SelectionCriteria Convert(FinalStatePatternParser.CutBinaryContext context)
+        {
+            var c = new SelectionCriteria();
+            c.BinaryRelation = context.BINARY_OP().GetText();
+            c.FirstArgument = Convert(context.cut_arg()[0]);
+            c.SecondArgument = Convert(context.cut_arg()[1]);
+            return c;
+        }
+
+        /// <summary>
+        /// The user has given us a range cut
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitCutRange(FinalStatePatternParser.CutRangeContext context)
+        {
+            var c1 = new SelectionCriteria();
+            var c2 = new SelectionCriteria();
+
+            c1.BinaryRelation = context.BINARY_OP(0).GetText();
+            c2.BinaryRelation = context.BINARY_OP(1).GetText();
+
+            c1.FirstArgument = Convert(context.cut_number(0));
+            c1.SecondArgument = Convert(context.cut_name());
+
+            c2.FirstArgument = Convert(context.cut_name());
+            c2.SecondArgument = Convert(context.cut_number(1));
+
+            _current_criteria.Peek().Add(c1);
+            _current_criteria.Peek().Add(c2);
+
+            base.ExitCutRange(context);
+        }
+
+        /// <summary>
+        /// Convert a argument to a cut (a single "term") into a IValueBase
+        /// </summary>
+        /// <param name="cut_argContext"></param>
+        /// <returns></returns>
+        private IValueBase Convert(FinalStatePatternParser.Cut_argContext cut_argContext)
+        {
+            if (cut_argContext.cut_name() != null)
+            {
+                return Convert(cut_argContext.cut_name());
+            }
+            else if (cut_argContext.cut_number() != null)
+            {
+                return Convert(cut_argContext.cut_number());
+            }
+            else if (cut_argContext.function() != null)
+            {
+                // Should have already been parsed.
+                return _parsed_functions.Dequeue();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        /// <summary>
+        /// Cache the cut when we are doing a function as some special rules can apply.
+        /// </summary>
+        private FinalStateObject _current_cut = null;
+
+        private Queue<IValueBase> _parsed_functions = new Queue<IValueBase>();
+
+        /// <summary>
+        /// When we enter a function argument list processing, make sure to specify what is needed.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void EnterFunction(FinalStatePatternParser.FunctionContext context)
+        {
+            _current_cut = new FinalStateObject() { Name = string.Format("FuncArg{0}", context.NAME().GetText()) };
+            _current_criteria.Push(new List<ISelectionCriteriaBase>());
+            base.EnterFunction(context);
+        }
+
+        /// <summary>
+        /// When we leave the function, clean up so we don't accidentally re-use the
+        /// function context.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitFunction(FinalStatePatternParser.FunctionContext context)
+        {
+            _current_cut = null;
+            _parsed_functions.Enqueue(Convert(context));
+            _current_criteria.Pop();
+            base.ExitFunction(context);
         }
 
         /// <summary>
@@ -135,97 +237,6 @@ namespace FinalStatePatternLib.Listeners
                 FSOs.Add(new_fso);
                 return new_fso;
             }
-        }
-
-        /// <summary>
-        /// We see a binary cut, so put it on the list.
-        /// </summary>
-        /// <param name="context"></param>
-        public override void ExitCutBinary(FinalStatePatternParser.CutBinaryContext context)
-        {
-            var c = new SelectionCriteria();
-            c.BinaryRelation = context.BINARY_OP().GetText();
-            c.FirstArgument = Convert(context.cut_arg()[0]);
-            c.SecondArgument = Convert(context.cut_arg()[1]);
-            _current_criteria.Add(c);
-
-            // And off we go
-            base.ExitCutBinary(context);
-        }
-
-        /// <summary>
-        /// The user has given us a range cut
-        /// </summary>
-        /// <param name="context"></param>
-        public override void ExitCutRange(FinalStatePatternParser.CutRangeContext context)
-        {
-            var c1 = new SelectionCriteria();
-            var c2 = new SelectionCriteria();
-
-            c1.BinaryRelation = context.BINARY_OP(0).GetText();
-            c2.BinaryRelation = context.BINARY_OP(1).GetText();
-
-            c1.FirstArgument = Convert(context.cut_number(0));
-            c1.SecondArgument = Convert(context.cut_name());
-
-            c2.FirstArgument = Convert(context.cut_name());
-            c2.SecondArgument = Convert(context.cut_number(1));
-
-            _current_criteria.Add(c1);
-            _current_criteria.Add(c2);
-
-            base.ExitCutRange(context);
-        }
-
-        /// <summary>
-        /// Convert a argument to a cut (a single "term") into a IValueBase
-        /// </summary>
-        /// <param name="cut_argContext"></param>
-        /// <returns></returns>
-        private IValueBase Convert(FinalStatePatternParser.Cut_argContext cut_argContext)
-        {
-            if (cut_argContext.cut_name() != null)
-            {
-                return Convert(cut_argContext.cut_name());
-            }
-            else if (cut_argContext.cut_number() != null)
-            {
-                return Convert(cut_argContext.cut_number());
-            }
-            else if (cut_argContext.function() != null)
-            {
-                return Convert(cut_argContext.function());
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-        }
-
-        /// <summary>
-        /// Cache the cut when we are doing a function as some special rules can apply.
-        /// </summary>
-        private FinalStateObject _current_cut = null;
-
-        /// <summary>
-        /// When we enter a function argument list processing, make sure to specify what is needed.
-        /// </summary>
-        /// <param name="context"></param>
-        public override void EnterFunction(FinalStatePatternParser.FunctionContext context)
-        {
-            _current_cut = new FinalStateObject() { Name = string.Format("FuncArg{0}", context.NAME().GetText()) };
-            base.EnterFunction(context);
-        }
-
-        /// <summary>
-        /// When we leave the function, clean up so we don't accidentally re-use the
-        /// function context.
-        /// </summary>
-        /// <param name="context"></param>
-        public override void ExitFunction(FinalStatePatternParser.FunctionContext context)
-        {
-            _current_cut = null;
-            base.ExitFunction(context);
         }
 
         /// <summary>
@@ -292,16 +303,35 @@ namespace FinalStatePatternLib.Listeners
         {
             var allObjects =
                 functionContext.function_arg()
-                .SelectMany(fa => ExtractFSOReferences(fa))
-                .ToArray();
+                .SelectMany(fa => ExtractFSOReferences(fa));
+            var seenObjectNames = new HashSet<string>();
+            foreach (var anObject in allObjects)
+            {
+                seenObjectNames.Add(anObject.Name);
+            }
+
+            var textItems =
+                functionContext
+                .function_arg()
+                .Select(a => a.GetText());
+            string arglist = "";
+            foreach (var at in textItems)
+            {
+                if (arglist.Length > 0)
+                    arglist += ", ";
+                arglist += at;
+            }
 
             return new FunctionPhysicalQuantity()
             {
                 Name = functionContext.NAME().GetText(),
-                ArgumentList = "",
-                RefersToObjects = new string[0]
+                ArgumentList = arglist,
+                RefersToObjects = seenObjectNames.ToArray()
             };
         }
+
+        /// TODO: This extraction code is horrible, and is already discovered by parsing. We should be able to just
+        /// AVOID IT. Make the parser better when we learn how to do it.
 
         /// <summary>
         /// Given an argument, see if there are any FSO's in there.
@@ -335,6 +365,15 @@ namespace FinalStatePatternLib.Listeners
             {
                 yield return Convert(cut_nameContext.object_name());
             }
+            else if (cut_nameContext.NAME() != null)
+            {
+                var nm = cut_nameContext.NAME().GetText();
+                var f = FSOs.Where(fs => fs.Name == nm).FirstOrDefault();
+                if (f != null)
+                {
+                    yield return f;
+                }
+            }
         }
 
         /// <summary>
@@ -343,6 +382,85 @@ namespace FinalStatePatternLib.Listeners
         /// <param name="cutContext"></param>
         /// <returns></returns>
         private IEnumerable<FinalStateObject> ExtractFSOReferences(FinalStatePatternParser.CutContext cutContext)
+        {
+            return _current_criteria.Peek()
+                .SelectMany(sc => ExtractFSOReferences(sc));
+        }
+
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(ISelectionCriteriaBase sc)
+        {
+            if (sc is SelectionCriteria)
+            {
+                var fsc = sc as SelectionCriteria;
+                return ExtractFSOReference(fsc.FirstArgument)
+                    .Concat(ExtractFSOReference(fsc.SecondArgument));
+            }
+            else if (sc is ANDOR)
+            {
+                return (sc as ANDOR)
+                    .Arguments
+                    .SelectMany(a => ExtractFSOReferences(a));
+            }
+            else
+            {
+                throw new InvalidOperationException("Unknown selectrion criteria");
+            }
+        }
+
+        /// <summary>
+        /// Extract the FSO references.
+        /// </summary>
+        /// <param name="valueBase"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReference(IValueBase valueBase)
+        {
+            if (valueBase is PhysicalValue)
+            {
+                return ExtractFSOReferences(valueBase as PhysicalValue);
+            }
+            else if (valueBase is SinglePhysicalQuantity)
+            {
+                return ExtractFSOReferences(valueBase as SinglePhysicalQuantity);
+            }
+            else if (valueBase is FunctionPhysicalQuantity)
+            {
+                return ExtractFSOReferences(valueBase as FunctionPhysicalQuantity);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Return a function's referenced items.
+        /// </summary>
+        /// <param name="functionPhysicalQuantity"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(FunctionPhysicalQuantity functionPhysicalQuantity)
+        {
+            return functionPhysicalQuantity.RefersToObjects
+                .Select(o => FSOs.Where(fs => fs.Name == o).First());
+        }
+
+        /// <summary>
+        /// List the various items
+        /// </summary>
+        /// <param name="singlePhysicalQuantity"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(SinglePhysicalQuantity singlePhysicalQuantity)
+        {
+            if (singlePhysicalQuantity.RefersToObject != null)
+                return FSOs.Where(fs => fs.Name == singlePhysicalQuantity.RefersToObject);
+            return Enumerable.Empty<FinalStateObject>();
+        }
+
+        /// <summary>
+        /// A physical value has nothing.
+        /// </summary>
+        /// <param name="physicalValue"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(PhysicalValue physicalValue)
         {
             return Enumerable.Empty<FinalStateObject>();
         }

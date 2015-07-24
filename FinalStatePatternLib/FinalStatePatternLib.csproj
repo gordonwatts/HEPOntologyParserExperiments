@@ -50,7 +50,7 @@
     <Compile Include="OWLData\FinalStateObject.cs" />
     <Compile Include="OWLData\FunctionPhysicalQuantity.cs" />
     <Compile Include="OWLData\IValueBase.cs" />
-    <Compile Include="OWLData\PhysicalQuantity.cs" />
+    <Compile Include="OWLData\SinglePhysicalQuantity.cs" />
     <Compile Include="OWLData\PhysicalValue.cs" />
     <Compile Include="OWLData\SelectionCriteria.cs" />
     <Compile Include="OWLData\ISelectionCriteriaBase.cs" />

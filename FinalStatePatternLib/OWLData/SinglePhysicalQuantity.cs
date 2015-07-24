@@ -12,5 +12,10 @@ namespace FinalStatePatternLib.OWLData
         /// What about the object (pT, eta, etc.)
         /// </summary>
         public string PhysicalQantity;
+
+        public override string ToString()
+        {
+            return string.Format("{0}{1}", RefersToObject, PhysicalQantity == null ? "" : "." + PhysicalQantity);
+        }
     }
 }
