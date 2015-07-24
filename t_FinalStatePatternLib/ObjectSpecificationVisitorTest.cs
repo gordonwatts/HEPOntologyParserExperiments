@@ -343,7 +343,14 @@ namespace t_FinalStatePatternLib
 
             Assert.AreEqual(1, dfs.FinalStateObjects.Count);
             Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
-            Assert.Inconclusive();
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+
+            Assert.AreEqual(2, f1.RefersToObjects.Length);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
+            Assert.AreEqual("FuncArgNTrack", f1.RefersToObjects[1].Name);
+            Assert.AreEqual("J2, DR=0.2, pT>1", f1.ArgumentList);
         }
 
         [TestMethod]
@@ -354,7 +361,13 @@ namespace t_FinalStatePatternLib
 
             Assert.AreEqual(1, dfs.FinalStateObjects.Count);
             Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
-            Assert.Inconclusive();
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+
+            Assert.AreEqual(2, f1.RefersToObjects.Length);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
+            Assert.AreEqual("FuncArgNTrack", f1.RefersToObjects[1].Name);
         }
 
         /// <summary>
@@ -363,13 +376,44 @@ namespace t_FinalStatePatternLib
         [TestMethod]
         public void FunctionInObjSpecification()
         {
-            Assert.Inconclusive();
+            // TODO: (WARNING) - this works, but DR might be a funciton argument, not an argument
+            // of J2 - the parser needs to know more than symantics... it needs a model to help
+            // understand what is going on here.
+
+            var text = "J2(atlas-jet) : NTrack(J2.pT > 30 GeV, DR=0.2, pT>1) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+
+            Assert.AreEqual(1, f1.RefersToObjects.Length);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
         }
 
         [TestMethod]
         public void TwoFunctionsInSingleCut()
         {
-            Assert.Inconclusive();
+            var text = "J2(atlas-jet); J1(atlas-jet); NTrack(J2.pT > 30 GeV, DR=0.2, pT>1) = NTK(J1.pT > 30 GeV);";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(2, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+            var f2 = s1.SecondArgument as FunctionPhysicalQuantity;
+
+            Assert.AreEqual(2, f1.RefersToObjects.Length);
+            Assert.AreEqual("J2", f1.RefersToObjects[0].Name);
+            Assert.AreEqual("FuncArgNTrack", f1.RefersToObjects[1].Name);
+            Assert.AreEqual("J2.pT>30GeV, DR=0.2, pT>1", f1.ArgumentList);
+
+            Assert.AreEqual(1, f2.RefersToObjects.Length);
+            Assert.AreEqual("J1", f2.RefersToObjects[0].Name);
+            Assert.AreEqual("J1.pT>30GeV", f2.ArgumentList);
         }
     }
 }
