@@ -216,9 +216,17 @@ namespace FinalStatePatternLib.Listeners
                 throw new ArgumentException(string.Format("Unable to figure out what object this value is refering to: {0}", func.NAME().GetText()));
             }
 
+            // It is possible to have a name like ETMiss as a stand-alone name.
+            // However, then the fso must be defined.
+            // (see above)... And we really need to double check this.
+            // TODO: Alias mechanism so ETMiss => ETMiss.ET or similar?
+            // Or we can use MET or something like that - so most physicists will
+            // end up doing the "right thing".
+            var name = func.NAME() == null ? "" : func.NAME().GetText();
+
             return new SinglePhysicalQuantity()
             {
-                PhysicalQantity = func.NAME().GetText(),
+                PhysicalQantity = name,
                 RefersToObject = fso.Name
             };
         }

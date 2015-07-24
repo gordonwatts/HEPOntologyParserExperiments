@@ -170,5 +170,24 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("ET", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
             Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
         }
+
+        [TestMethod]
+        public void NameInSingleCutListSingleObjectName()
+        {
+            var text = "ETMiss(atlas-met) < 50 GeV;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            Assert.AreEqual("ETMiss", dfs.FinalStateObjects[0].Name);
+            Assert.AreEqual("atlas-met", dfs.FinalStateObjects[0].BaseDefinition);
+
+            Assert.AreEqual("<", (dfs.Criteria.Arguments[0] as SelectionCriteria).BinaryRelation);
+
+            // TODO: May be we want some sort of built-in alias mechanism, so this becomes ET or something like that.
+            Assert.AreEqual("", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
+            Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
+        }
     }
 }

@@ -47,6 +47,7 @@ cut_arg
 
 cut_name
 	: NAME
+	| object_name
 	| object_name '.' NAME
 	;
 
