@@ -48,6 +48,7 @@
     <Compile Include="OWLData\ANDOR.cs" />
     <Compile Include="OWLData\DetectorFinalState.cs" />
     <Compile Include="OWLData\FinalStateObject.cs" />
+    <Compile Include="OWLData\FunctionPhysicalQuantity.cs" />
     <Compile Include="OWLData\IValueBase.cs" />
     <Compile Include="OWLData\PhysicalQuantity.cs" />
     <Compile Include="OWLData\PhysicalValue.cs" />

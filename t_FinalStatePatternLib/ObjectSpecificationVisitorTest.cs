@@ -189,5 +189,108 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).PhysicalQantity);
             Assert.AreEqual("ETMiss", ((dfs.Criteria.Arguments[0] as SelectionCriteria).FirstArgument as SinglePhysicalQuantity).RefersToObject);
         }
+
+        [TestMethod]
+        public void SingleLineFunctionRestriction()
+        {
+            var text = "J2(atlas-jet); NTrack(J2, DR=0.2, pT>1) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+            Assert.Inconclusive();
+        }
+
+        [TestMethod]
+        public void SingleLineFunctionRestrictionEmpty()
+        {
+            var text = "J2(atlas-jet); NTrack() = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            Assert.IsInstanceOfType(s1.FirstArgument, typeof(FunctionPhysicalQuantity));
+            Assert.IsInstanceOfType(s1.SecondArgument, typeof(PhysicalValue));
+            Assert.AreEqual("=", s1.BinaryRelation);
+
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+            Assert.AreEqual("NTrack", f1.Name);
+            Assert.AreEqual("", f1.ArgumentList);
+            Assert.AreEqual(0, f1.RefersToObjects.Length);
+        }
+
+        [TestMethod]
+        public void SingleLineFunctionRestrictionFunctionCutArg()
+        {
+            var text = "J2(atlas-jet); NTrack(pT>0) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            Assert.IsInstanceOfType(s1.FirstArgument, typeof(FunctionPhysicalQuantity));
+            Assert.IsInstanceOfType(s1.SecondArgument, typeof(PhysicalValue));
+            Assert.AreEqual("=", s1.BinaryRelation);
+
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+            Assert.AreEqual("NTrack", f1.Name);
+            Assert.AreEqual("", f1.ArgumentList);
+            Assert.AreEqual(0, f1.RefersToObjects.Length);
+        }
+
+        [TestMethod]
+        public void SingleLineFunctionRestrictionFSORef()
+        {
+            var text = "J2(atlas-jet); NTrack(J2) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            Assert.IsInstanceOfType(s1.FirstArgument, typeof(FunctionPhysicalQuantity));
+            Assert.IsInstanceOfType(s1.SecondArgument, typeof(PhysicalValue));
+            Assert.AreEqual("=", s1.BinaryRelation);
+
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+            Assert.AreEqual("NTrack", f1.Name);
+            Assert.AreEqual("", f1.ArgumentList);
+            Assert.AreEqual(0, f1.RefersToObjects.Length);
+        }
+
+        [TestMethod]
+        public void SingleLineFunctionRestrictionFSOCutRef()
+        {
+            var text = "J2(atlas-jet); NTrack(J2.pT>10 GeV) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+
+            var s1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            Assert.IsInstanceOfType(s1.FirstArgument, typeof(FunctionPhysicalQuantity));
+            Assert.IsInstanceOfType(s1.SecondArgument, typeof(PhysicalValue));
+            Assert.AreEqual("=", s1.BinaryRelation);
+
+            var f1 = s1.FirstArgument as FunctionPhysicalQuantity;
+            Assert.AreEqual("NTrack", f1.Name);
+            Assert.AreEqual("", f1.ArgumentList);
+            Assert.AreEqual(0, f1.RefersToObjects.Length);
+        }
+
+        [TestMethod]
+        public void SingleLineFunctionWithCutAndObjRef()
+        {
+            var text = "J2(atlas-jet); NTrack(J2.pT > 30 GeV, DR=0.2, pT>1) = 0;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(1, dfs.FinalStateObjects.Count);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+            Assert.Inconclusive();
+
+        }
     }
 }

@@ -192,10 +192,40 @@ namespace FinalStatePatternLib.Listeners
             {
                 return Convert(cut_argContext.cut_number());
             }
+            else if (cut_argContext.function() != null)
+            {
+                return Convert(cut_argContext.function());
+            }
             else
             {
                 throw new InvalidOperationException();
             }
+        }
+
+        /// <summary>
+        /// Cache the cut when we are doing a function as some special rules can apply.
+        /// </summary>
+        private FinalStateObject _current_cut = null;
+
+        /// <summary>
+        /// When we enter a function argument list processing, make sure to specify what is needed.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void EnterFunction(FinalStatePatternParser.FunctionContext context)
+        {
+            _current_cut = new FinalStateObject() { Name = string.Format("FuncArg{0}", context.NAME().GetText()) };
+            base.EnterFunction(context);
+        }
+
+        /// <summary>
+        /// When we leave the function, clean up so we don't accidentally re-use the
+        /// function context.
+        /// </summary>
+        /// <param name="context"></param>
+        public override void ExitFunction(FinalStatePatternParser.FunctionContext context)
+        {
+            _current_cut = null;
+            base.ExitFunction(context);
         }
 
         /// <summary>
@@ -205,7 +235,15 @@ namespace FinalStatePatternLib.Listeners
         /// <returns></returns>
         private IValueBase Convert(FinalStatePatternParser.Cut_nameContext func)
         {
+            // Defaults, depending on context
+            // This is what happens when the same code is used for multiple rules. :(
             var fso = _current_fso;
+            if (fso == null)
+            {
+                fso = _current_cut;
+            }
+
+            // See if the fso was explicitly defined.
             if (func.object_name() != null)
             {
                 fso = Convert(func.object_name(), AllowedFSODefinitionReference.kAsDefinitionOrReference);
@@ -244,6 +282,71 @@ namespace FinalStatePatternLib.Listeners
                 Unit = cut_numberContext.unit() == null ? null : cut_numberContext.unit().GetText()
             };
         }
+
+        /// <summary>
+        /// Convert a function
+        /// </summary>
+        /// <param name="functionContext"></param>
+        /// <returns></returns>
+        private IValueBase Convert(FinalStatePatternParser.FunctionContext functionContext)
+        {
+            var allObjects =
+                functionContext.function_arg()
+                .SelectMany(fa => ExtractFSOReferences(fa))
+                .ToArray();
+
+            return new FunctionPhysicalQuantity()
+            {
+                Name = functionContext.NAME().GetText(),
+                ArgumentList = "",
+                RefersToObjects = new string[0]
+            };
+        }
+
+        /// <summary>
+        /// Given an argument, see if there are any FSO's in there.
+        /// </summary>
+        /// <param name="fa"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(FinalStatePatternParser.Function_argContext fa)
+        {
+            if (fa.cut() != null)
+            {
+                return ExtractFSOReferences(fa.cut());
+            }
+            else if (fa.cut_name() != null)
+            {
+                return ExtractFSOReferences(fa.cut_name());
+            }
+            else
+            {
+                throw new InvalidOperationException("Unable to extra information from a function argument.");
+            }
+        }
+
+        /// <summary>
+        /// Given a cut name, see if there are any references to various FSO's.
+        /// </summary>
+        /// <param name="cut_nameContext"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(FinalStatePatternParser.Cut_nameContext cut_nameContext)
+        {
+            if (cut_nameContext.object_name() != null)
+            {
+                yield return Convert(cut_nameContext.object_name());
+            }
+        }
+
+        /// <summary>
+        /// Extract FSO references
+        /// </summary>
+        /// <param name="cutContext"></param>
+        /// <returns></returns>
+        private IEnumerable<FinalStateObject> ExtractFSOReferences(FinalStatePatternParser.CutContext cutContext)
+        {
+            return Enumerable.Empty<FinalStateObject>();
+        }
+
 
     }
 }

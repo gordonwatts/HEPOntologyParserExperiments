@@ -43,6 +43,16 @@ cut
 cut_arg
 	: cut_number
 	| cut_name
+	| function
+	;
+
+function
+	: NAME '(' (function_arg (',' function_arg)*)? ')'
+	;
+
+function_arg
+	: cut_name
+	| cut
 	;
 
 cut_name
