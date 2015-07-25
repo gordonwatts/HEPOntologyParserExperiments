@@ -252,10 +252,11 @@ The OWL dump for this looks like the following:
   dfs:hasSecondArgument <#number43> .
 
 <#andor45> rdf:type dfs:And ;
-dfs:hasOperand <#selectionCriteria2> , <#selectionCriteria5> , <#selectionCriteria8> , <#selectionCriteria11> , <#selectionCriteria14> , <#selectionCr
-iteria17> , <#selectionCriteria20> , <#selectionCriteria23> , <#selectionCriteria26> , <#selectionCriteria29> , <#selectionCriteria32> , <#selectionCr
-iteria35> , <#selectionCriteria38> , <#selectionCriteria41> , <#selectionCriteria44> .
+  dfs:hasOperand <#selectionCriteria2> , <#selectionCriteria5> , <#selectionCriteria8> , <#selectionCriteria11> , <#selectionCriteria14> , <#selection
+Criteria17> , <#selectionCriteria20> , <#selectionCriteria23> , <#selectionCriteria26> , <#selectionCriteria29> , <#selectionCriteria32> , <#selection
+Criteria35> , <#selectionCriteria38> , <#selectionCriteria41> , <#selectionCriteria44> .
 
 <#detectorFinalState46> rdf:type dfs:DetectorFinalState ;
-  dfs:hasSelectionCriteria <#{0}> .
+  dfs:hasSelectionCriteria <#andor45> .
+
 ```

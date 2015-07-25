@@ -152,7 +152,7 @@ namespace FinalStatePatternLib
             // Next our body.
             var name = MakeName("andor");
             wr.WriteLine("<#{0}> rdf:type dfs:{1} ;", name, andor.AOType == ANDORType.kAnd ? "And" : "Or");
-            wr.Write("dfs:hasOperand ");
+            wr.Write("  dfs:hasOperand ");
             bool first = true;
             foreach (var a in criteria)
             {
@@ -184,7 +184,7 @@ namespace FinalStatePatternLib
 
             var name = MakeName("detectorFinalState");
             wr.WriteLine("<#{0}> rdf:type dfs:DetectorFinalState ;", name);
-            wr.WriteLine("  dfs:hasSelectionCriteria <#{0}> .");
+            wr.WriteLine("  dfs:hasSelectionCriteria <#{0}> .", sname);
 
             return name;
         }
