@@ -64,5 +64,17 @@ namespace t_FinalStatePatternLib
             var text = ms.ToString().Trim();
             Assert.AreEqual("<#physicalQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> ;\r\n  dfs:hasQuantity dfs:pT .", text);
         }
+
+        [TestMethod]
+        public void EmitFunction()
+        {
+            var fso1 = new FinalStateObject() { Name = "J1", BaseDefinition = null };
+            var fso2 = new FinalStateObject() { Name = "J2", BaseDefinition = null };
+            var fpv = new FunctionPhysicalQuantity() { ArgumentList = "J1.pT > 20, ET > 0, J2", Name = "NTrack", RefersToObjects = new FinalStateObject[] { fso1, fso2 } };
+            var ms = new StringWriter();
+            fpv.Emit(ms);
+            var text = ms.ToString().Trim();
+            Assert.AreEqual("<#functionQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> ;\r\n  dfs:refersToObject <#J2> ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
+        }
     }
 }

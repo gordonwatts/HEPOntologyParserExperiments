@@ -64,6 +64,18 @@ namespace FinalStatePatternLib
             return name;
         }
 
+        public static string Emit(this FunctionPhysicalQuantity fv, TextWriter wr)
+        {
+            var name = MakeName("functionQuantity");
+            wr.WriteLine("<#{0}> rdf:type dfs:PhysicalQuantity ;", name);
+            foreach (var q in fv.RefersToObjects)
+            {
+                wr.WriteLine("  dfs:refersToObject <#{0}> ;", q.Name);
+            }
+            wr.WriteLine("  dfs:hasQuantity \"{0}({1})\" .", fv.Name, fv.ArgumentList);
+            return name;
+        }
+
         /// <summary>
         /// Track counter
         /// </summary>
