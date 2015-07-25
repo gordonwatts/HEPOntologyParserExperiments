@@ -2,6 +2,7 @@
 using FinalStatePatternLib.OWLData;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Linq;
 
 namespace t_FinalStatePatternLib
 {
@@ -31,7 +32,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fso.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#hi> rdf:type dfs:PhysicsObject; \n  hasBaseDefinition: fork .", text);
+            Assert.AreEqual("<#hi> rdf:type dfs:PhysicsObject ;\r\n  hasBaseDefinition: \"fork\" .", text);
         }
 
         [TestMethod]
@@ -75,6 +76,33 @@ namespace t_FinalStatePatternLib
             fpv.Emit(ms);
             var text = ms.ToString().Trim();
             Assert.AreEqual("<#functionQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> ;\r\n  dfs:refersToObject <#J2> ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
+        }
+
+        [TestMethod]
+        public void EmitSelectionCriteria()
+        {
+            var n1 = new PhysicalValue() { Number = 51 };
+            var n2 = new PhysicalValue() { Number = 52 };
+            var sc = new SelectionCriteria()
+            {
+                BinaryRelation = ">",
+                FirstArgument = n1,
+                SecondArgument = n2
+            };
+            var ms = new StringWriter();
+            sc.Emit(ms);
+            var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
+            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;", text[0]);
+            Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
+            Assert.AreEqual("", text[2]);
+            Assert.AreEqual("<#number1> rdf:type dfs:NumericalValue ;", text[3]);
+            Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
+            Assert.AreEqual("", text[5]);
+
+            Assert.AreEqual("<#selectionCriteria2> rdf:type dfs:SelectionCriteria ;", text[6]);
+            Assert.AreEqual("dfs:usesBinaryRelation dfs:greaterThan ;", text[7]);
+            Assert.AreEqual("dfs:hasFirstArgument <#number0> ;", text[8]);
+            Assert.AreEqual("dfs:hasSecondArgument <#number1> .", text[9]);
         }
     }
 }

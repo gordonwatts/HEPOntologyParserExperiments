@@ -1,4 +1,5 @@
 ﻿using FinalStatePatternLib.OWLData;
+using System;
 using System.IO;
 
 namespace FinalStatePatternLib
@@ -22,7 +23,9 @@ namespace FinalStatePatternLib
         /// <param name="wr"></param>
         public static string Emit(this FinalStateObject fso, TextWriter wr)
         {
-            wr.WriteLine("<#{0}> rdf:type dfs:PhysicsObject {1}", fso.Name, fso.BaseDefinition == null ? "." : fso.BaseDefinition);
+            wr.WriteLine("<#{0}> rdf:type dfs:PhysicsObject {1}", fso.Name, fso.BaseDefinition == null ? "." : ";");
+            if (fso.BaseDefinition != null)
+                wr.WriteLine("  hasBaseDefinition: \"{0}\" .", fso.BaseDefinition);
             return fso.Name;
         }
 
@@ -64,6 +67,12 @@ namespace FinalStatePatternLib
             return name;
         }
 
+        /// <summary>
+        /// Dump out a function reference
+        /// </summary>
+        /// <param name="fv"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
         public static string Emit(this FunctionPhysicalQuantity fv, TextWriter wr)
         {
             var name = MakeName("functionQuantity");
@@ -74,6 +83,81 @@ namespace FinalStatePatternLib
             }
             wr.WriteLine("  dfs:hasQuantity \"{0}({1})\" .", fv.Name, fv.ArgumentList);
             return name;
+        }
+
+        /// <summary>
+        /// General purpose IValueBase emitter.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
+        public static string Emit(this IValueBase v, TextWriter wr)
+        {
+            if (v is PhysicalValue)
+            {
+                return (v as PhysicalValue).Emit(wr);
+            }
+            else if (v is SinglePhysicalQuantity)
+            {
+                return (v as SinglePhysicalQuantity).Emit(wr);
+            }
+            else if (v is FunctionPhysicalQuantity)
+            {
+                return (v as FunctionPhysicalQuantity).Emit(wr);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Do not know how to emit type '{0}'", v.GetType().Name));
+            }
+        }
+
+        /// <summary>
+        /// Dump out a selection criteria.
+        /// </summary>
+        /// <param name="sc"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
+        public static string Emit(this SelectionCriteria sc, TextWriter wr)
+        {
+            var n1 = sc.FirstArgument.Emit(wr);
+            wr.WriteLine();
+            var n2 = sc.SecondArgument.Emit(wr);
+            wr.WriteLine();
+
+            var name = MakeName("selectionCriteria");
+            wr.WriteLine("<#{0}> rdf:type dfs:SelectionCriteria ;", name);
+            wr.WriteLine("  dfs:usesBinaryRelation dfs:{0} ;", AsDFSBinaryRelation(sc.BinaryRelation));
+            wr.WriteLine("  dfs:hasFirstArgument <#{0}> ;", n1);
+            wr.WriteLine("  dfs:hasSecondArgument <#{0}> .", n2);
+            return name;
+        }
+
+        private static string AsDFSBinaryRelation(string p)
+        {
+            if (p == ">")
+            {
+                return "greaterThan";
+            }
+            else if (p == "<")
+            {
+                return "lessThan";
+            }
+            else if (p == "=")
+            {
+                return "equal";
+            }
+            else if (p == ">=")
+            {
+                return "greaterEqual";
+            }
+            else if (p == "<=")
+            {
+                return "lessEqual";
+            }
+            else
+            {
+                throw new ArgumentException("Unknown operator: " + p);
+            }
         }
 
         /// <summary>
