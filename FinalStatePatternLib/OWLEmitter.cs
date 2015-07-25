@@ -68,10 +68,18 @@ namespace FinalStatePatternLib
         {
             var name = MakeName("functionQuantity");
             wr.WriteLine("<#{0}> rdf:type dfs:PhysicalQuantity ;", name);
+            wr.Write("  dfs:refersToObject ");
+            bool first = true;
             foreach (var q in fv.RefersToObjects)
             {
-                wr.WriteLine("  dfs:refersToObject <#{0}> ;", q.Name);
+                if (!first)
+                {
+                    wr.Write(" , ");
+                }
+                first = false;
+                wr.Write("<#{0}>", q.Name);
             }
+            wr.WriteLine(" ;");
             wr.WriteLine("  dfs:hasQuantity \"{0}({1})\" .", fv.Name, fv.ArgumentList);
             return name;
         }

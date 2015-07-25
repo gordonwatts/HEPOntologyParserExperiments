@@ -64,6 +64,26 @@ namespace t_FinalStatePatternLib
         }
 
         [TestMethod]
+        public void SingleNegCut()
+        {
+            var text = "J1: pT>-30 GeV;";
+            var dfs = text.Parse();
+
+            Assert.AreEqual(FinalStatePatternLib.OWLData.ANDORType.kAnd, dfs.Criteria.AOType);
+            Assert.AreEqual(1, dfs.Criteria.Arguments.Count);
+            Assert.IsInstanceOfType(dfs.Criteria.Arguments[0], typeof(SelectionCriteria));
+            var a1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            Assert.AreEqual(">", a1.BinaryRelation);
+            Assert.IsInstanceOfType(a1.FirstArgument, typeof(SinglePhysicalQuantity));
+            Assert.IsInstanceOfType(a1.SecondArgument, typeof(PhysicalValue));
+
+            var spq = a1.FirstArgument as SinglePhysicalQuantity;
+            var pv = a1.SecondArgument as PhysicalValue;
+
+            Assert.AreEqual(-30.0, pv.Number);
+        }
+
+        [TestMethod]
         public void SingleCutWithDecimal()
         {
             var text = "J1: absEta> 2.5;";
@@ -72,6 +92,17 @@ namespace t_FinalStatePatternLib
             var a1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
             var pv = a1.SecondArgument as PhysicalValue;
             Assert.AreEqual(2.5, pv.Number);
+        }
+
+        [TestMethod]
+        public void SingleNegCutWithDecimal()
+        {
+            var text = "J1: absEta> -2.5;";
+            var dfs = text.Parse();
+
+            var a1 = dfs.Criteria.Arguments[0] as SelectionCriteria;
+            var pv = a1.SecondArgument as PhysicalValue;
+            Assert.AreEqual(-2.5, pv.Number);
         }
 
         [TestMethod]
