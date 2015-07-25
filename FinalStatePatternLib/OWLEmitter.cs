@@ -164,7 +164,7 @@ namespace FinalStatePatternLib
         /// <param name="state"></param>
         /// <param name="wr"></param>
         /// <returns></returns>
-        private static string Emit(this DetectorFinalState state, TextWriter wr)
+        public static string Emit(this DetectorFinalState state, TextWriter wr)
         {
             foreach (var fso in state.FinalStateObjects)
             {
