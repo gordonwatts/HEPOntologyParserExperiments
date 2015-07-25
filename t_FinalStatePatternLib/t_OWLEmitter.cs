@@ -75,7 +75,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fpv.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#functionQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> ;\r\n  dfs:refersToObject <#J2> ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
+            Assert.AreEqual("<#functionQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> , <#J2> ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
         }
 
         [TestMethod]
@@ -103,6 +103,69 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("dfs:usesBinaryRelation dfs:greaterThan ;", text[7]);
             Assert.AreEqual("dfs:hasFirstArgument <#number0> ;", text[8]);
             Assert.AreEqual("dfs:hasSecondArgument <#number1> .", text[9]);
+        }
+
+        [TestMethod]
+        public void EmitANDOR()
+        {
+            var n1 = new PhysicalValue() { Number = 51 };
+            var n2 = new PhysicalValue() { Number = 52 };
+            var sc1 = new SelectionCriteria()
+            {
+                BinaryRelation = ">",
+                FirstArgument = n1,
+                SecondArgument = n2
+            };
+
+            var n3 = new PhysicalValue() { Number = 53 };
+            var n4 = new PhysicalValue() { Number = 54 };
+            var sc2 = new SelectionCriteria()
+            {
+                BinaryRelation = "<",
+                FirstArgument = n3,
+                SecondArgument = n4
+            };
+
+            var andor = new ANDOR()
+            {
+                AOType = ANDORType.kAnd
+            };
+            andor.Arguments.Add(sc1);
+            andor.Arguments.Add(sc2);
+
+            var ms = new StringWriter();
+            andor.Emit(ms);
+            var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
+
+            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;", text[0]);
+            Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
+            Assert.AreEqual("", text[2]);
+            Assert.AreEqual("<#number1> rdf:type dfs:NumericalValue ;", text[3]);
+            Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
+            Assert.AreEqual("", text[5]);
+
+            Assert.AreEqual("<#selectionCriteria2> rdf:type dfs:SelectionCriteria ;", text[6]);
+            Assert.AreEqual("dfs:usesBinaryRelation dfs:greaterThan ;", text[7]);
+            Assert.AreEqual("dfs:hasFirstArgument <#number0> ;", text[8]);
+            Assert.AreEqual("dfs:hasSecondArgument <#number1> .", text[9]);
+            Assert.AreEqual("", text[10]);
+
+            Assert.AreEqual("<#number3> rdf:type dfs:NumericalValue ;", text[11]);
+            Assert.AreEqual("dfs:hasNumber \"53\"^^xsd:decimal .", text[12]);
+            Assert.AreEqual("", text[13]);
+            Assert.AreEqual("<#number4> rdf:type dfs:NumericalValue ;", text[14]);
+            Assert.AreEqual("dfs:hasNumber \"54\"^^xsd:decimal .", text[15]);
+            Assert.AreEqual("", text[16]);
+
+            Assert.AreEqual("<#selectionCriteria5> rdf:type dfs:SelectionCriteria ;", text[17]);
+            Assert.AreEqual("dfs:usesBinaryRelation dfs:lessThan ;", text[18]);
+            Assert.AreEqual("dfs:hasFirstArgument <#number3> ;", text[19]);
+            Assert.AreEqual("dfs:hasSecondArgument <#number4> .", text[20]);
+            Assert.AreEqual("", text[21]);
+
+            Assert.AreEqual("<#andor6> rdf:type dfs:And ;", text[22]);
+            Assert.AreEqual("dfs:hasOperand <#selectionCriteria2> , <#selectionCriteria5> .", text[23]);
+
         }
     }
 }

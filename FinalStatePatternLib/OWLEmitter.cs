@@ -1,6 +1,7 @@
 ﻿using FinalStatePatternLib.OWLData;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace FinalStatePatternLib
 {
@@ -130,6 +131,63 @@ namespace FinalStatePatternLib
             wr.WriteLine("  dfs:hasFirstArgument <#{0}> ;", n1);
             wr.WriteLine("  dfs:hasSecondArgument <#{0}> .", n2);
             return name;
+        }
+
+        /// <summary>
+        /// Emit an AND/OR guy
+        /// </summary>
+        /// <param name="andor"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
+        public static string Emit(this ANDOR andor, TextWriter wr)
+        {
+            // Get the arguments out
+            var criteria = andor.Arguments
+                .Select(a =>
+                {
+                    var n = a.Emit(wr);
+                    wr.WriteLine();
+                    return n;
+                })
+                .ToArray();
+
+            // Next our body.
+            var name = MakeName("andor");
+            wr.WriteLine("<#{0}> rdf:type dfs:{1} ;", name, andor.AOType == ANDORType.kAnd ? "And" : "Or");
+            wr.Write("dfs:hasOperand ");
+            bool first = true;
+            foreach (var a in criteria)
+            {
+                if (!first)
+                    wr.Write(" , ");
+                first = false;
+                wr.Write("<#{0}>", a);
+            }
+            wr.WriteLine(" .");
+
+            return name;
+        }
+
+        /// <summary>
+        /// Emit all kinds of selection
+        /// </summary>
+        /// <param name="sb"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
+        private static string Emit(this ISelectionCriteriaBase sb, TextWriter wr)
+        {
+            if (sb is SelectionCriteria)
+            {
+                return (sb as SelectionCriteria).Emit(wr);
+            }
+            else if (sb is ANDOR)
+            {
+                return (sb as ANDOR).Emit(wr);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Don't know how to emit type '{0}'", sb.GetType()));
+            }
         }
 
         private static string AsDFSBinaryRelation(string p)
