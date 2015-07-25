@@ -8,16 +8,6 @@ namespace FinalStatePatternLib
     public static class OWLEmitter
     {
         /// <summary>
-        /// Emit a detector final state
-        /// </summary>
-        /// <param name="dfs"></param>
-        /// <param name="wr"></param>
-        public static void Emit(this DetectorFinalState dfs, TextWriter wr)
-        {
-
-        }
-
-        /// <summary>
         /// Emit a fso
         /// </summary>
         /// <param name="fso"></param>
@@ -164,6 +154,29 @@ namespace FinalStatePatternLib
                 wr.Write("<#{0}>", a);
             }
             wr.WriteLine(" .");
+
+            return name;
+        }
+
+        /// <summary>
+        /// Emit the top dog
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="wr"></param>
+        /// <returns></returns>
+        private static string Emit(this DetectorFinalState state, TextWriter wr)
+        {
+            foreach (var fso in state.FinalStateObjects)
+            {
+                fso.Emit(wr);
+                wr.WriteLine();
+            }
+            var sname = state.Criteria.Emit(wr);
+            wr.WriteLine();
+
+            var name = MakeName("detectorFinalState");
+            wr.WriteLine("<#{0}> rdf:type dfs:DetectorFinalState ;", name);
+            wr.WriteLine("  dfs:hasSelectionCriteria <#{0}> .");
 
             return name;
         }

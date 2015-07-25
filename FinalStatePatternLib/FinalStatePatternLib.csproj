@@ -55,7 +55,6 @@
     <Compile Include="OWLData\SelectionCriteria.cs" />
     <Compile Include="OWLData\ISelectionCriteriaBase.cs" />
     <Compile Include="OWLEmitter.cs" />
-    <Compile Include="SemanticData\ObjectSpecification.cs" />
     <Compile Include="ParseFinalStatePattern.cs" />
     <Compile Include="FinalStatePattern.g4.lexer.cs">
       <DependentUpon>FinalStatePattern.g4</DependentUpon>
