@@ -1,6 +1,5 @@
 ﻿   J1 (anti-kt-04): et>60 GeV, abseta < 2.5, EMF < 0.02, -1 ns < ArrivalTime < 5 ns;
    J2 (anti-kt-04): et>40 GeV, abseta < 2.5, EMF < 0.02, -1 ns < ArrivalTime < 5 ns;
-   Veto: J3 (anti-kt-04): et>40 GeV, abseta < 2.5, EMF < 0.02, -1 ns < ArrivalTime < 5 ns;
    PV1 (primary-vertex): NTrack >= 3, pT>1 GeV;
    NTrack(J1, DR=0.2, pT>1) = 0;
    NTrack(J2, DR=0.2, pT>1) = 0;
