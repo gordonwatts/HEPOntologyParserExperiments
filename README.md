@@ -19,8 +19,8 @@ The DSL is simple. For example, this specifies an exotics search for displaced j
 
 It will parse the below definition just fine. Two obvious things are missing:
 
-   - Using a "." in a name
-   - Veto:
+   - Using a "." in a base definition name.
+   - "Veto:" is not yet implemented.
 
 Both of these shouldn't be hard to add. There are a number of issues in the code:
 
