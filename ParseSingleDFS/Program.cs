@@ -42,7 +42,7 @@ namespace ParseSingleDFS
                 dfs.Emit(Console.Out);
             } catch (Exception e)
             {
-                Console.WriteLine("Parse failed...");
+                Console.WriteLine($"Parse and translation failed: {e.Message}");
             }
         }
     }

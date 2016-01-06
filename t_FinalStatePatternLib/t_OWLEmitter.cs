@@ -42,7 +42,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             pn.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal .", text);
+            Assert.AreEqual("atlas:number0 rdf:type qudt:QuantityValue ;\r\n  qudt:numericValue \"55\"^^xsd:decimal .", text);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             pn.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal ;\r\n  dfs:hasUnit dfs:GeV .", text);
+            Assert.AreEqual("atlas:number0 rdf:type qudt:QuantityValue ;\r\n  qudt:numericValue \"55\"^^xsd:decimal ;\r\n  qudt:unit unit:GigaElectronVolt .", text);
         }
 
         [TestMethod]
@@ -92,11 +92,11 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             sc.Emit(ms);
             var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
-            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;", text[0]);
-            Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
+            Assert.AreEqual("atlas:number0 rdf:type qudt:QuantityValue ;", text[0]);
+            Assert.AreEqual("qudt:numericValue \"51\"^^xsd:decimal .", text[1]);
             Assert.AreEqual("", text[2]);
-            Assert.AreEqual("atlas:number1 rdf:type dfs:NumericalValue ;", text[3]);
-            Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
+            Assert.AreEqual("atlas:number1 rdf:type qudt:QuantityValue ;", text[3]);
+            Assert.AreEqual("qudt:numericValue \"52\"^^xsd:decimal .", text[4]);
             Assert.AreEqual("", text[5]);
 
             Assert.AreEqual("atlas:selectionCriteria2 rdf:type dfs:SelectionCriteria ;", text[6]);
@@ -137,11 +137,11 @@ namespace t_FinalStatePatternLib
             andor.Emit(ms);
             var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
 
-            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;", text[0]);
-            Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
+            Assert.AreEqual("atlas:number0 rdf:type qudt:QuantityValue ;", text[0]);
+            Assert.AreEqual("qudt:numericValue \"51\"^^xsd:decimal .", text[1]);
             Assert.AreEqual("", text[2]);
-            Assert.AreEqual("atlas:number1 rdf:type dfs:NumericalValue ;", text[3]);
-            Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
+            Assert.AreEqual("atlas:number1 rdf:type qudt:QuantityValue ;", text[3]);
+            Assert.AreEqual("qudt:numericValue \"52\"^^xsd:decimal .", text[4]);
             Assert.AreEqual("", text[5]);
 
             Assert.AreEqual("atlas:selectionCriteria2 rdf:type dfs:SelectionCriteria ;", text[6]);
@@ -150,11 +150,11 @@ namespace t_FinalStatePatternLib
             Assert.AreEqual("dfs:hasSecondArgument atlas:number1 .", text[9]);
             Assert.AreEqual("", text[10]);
 
-            Assert.AreEqual("atlas:number3 rdf:type dfs:NumericalValue ;", text[11]);
-            Assert.AreEqual("dfs:hasNumber \"53\"^^xsd:decimal .", text[12]);
+            Assert.AreEqual("atlas:number3 rdf:type qudt:QuantityValue ;", text[11]);
+            Assert.AreEqual("qudt:numericValue \"53\"^^xsd:decimal .", text[12]);
             Assert.AreEqual("", text[13]);
-            Assert.AreEqual("atlas:number4 rdf:type dfs:NumericalValue ;", text[14]);
-            Assert.AreEqual("dfs:hasNumber \"54\"^^xsd:decimal .", text[15]);
+            Assert.AreEqual("atlas:number4 rdf:type qudt:QuantityValue ;", text[14]);
+            Assert.AreEqual("qudt:numericValue \"54\"^^xsd:decimal .", text[15]);
             Assert.AreEqual("", text[16]);
 
             Assert.AreEqual("atlas:selectionCriteria5 rdf:type dfs:SelectionCriteria ;", text[17]);

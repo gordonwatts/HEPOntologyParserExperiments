@@ -34,9 +34,11 @@ namespace FinalStatePatternLib
         /// <returns></returns>
         public static string Emit(this PhysicalValue pv, TextWriter wr)
         {
+            pv = SanitizeUnits(pv);
+
             var name = MakeName("number");
-            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:NumericalValue ;");
-            wr.Write($"  dfs:hasNumber \"{pv.Number}\"^^xsd:decimal ");
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type qudt:QuantityValue ;");
+            wr.Write($"  qudt:numericValue \"{pv.Number}\"^^xsd:decimal ");
             if (pv.Unit == null)
             {
                 wr.WriteLine(".");
@@ -44,9 +46,48 @@ namespace FinalStatePatternLib
             else
             {
                 wr.WriteLine(";");
-                wr.WriteLine($"  dfs:hasUnit dfs:{pv.Unit} .");
+                wr.WriteLine($"  qudt:unit {QUDTUnit(pv.Unit)} .");
             }
             return name;
+        }
+
+        /// <summary>
+        /// Some units are not valid, but can easily be made valid. So we will make this work
+        /// correctly.
+        /// </summary>
+        /// <param name="pv"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// TODO: It could be that some fo these hould be added to the "unit" database to make them more easy to deal
+        /// with when humans look at them.
+        /// </remarks>
+        private static PhysicalValue SanitizeUnits(PhysicalValue pv)
+        {
+            if (pv.Unit == null)
+                return pv;
+
+            var unit = pv.Unit.ToLower();
+            if (unit == "ns")
+            {
+                return new PhysicalValue() { Unit = "s", Number = pv.Number * 1.0E-9 };
+            }
+            return pv;
+        }
+
+        /// <summary>
+        /// Convert from HEP units to QUDT units
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        private static string QUDTUnit(string unit)
+        {
+            var aslow = unit.ToLower();
+            if (aslow == "gev")
+                return "unit:GigaElectronVolt";
+            if (aslow == "s")
+                return "unit:SecondTime";
+
+            throw new ArgumentException($"Unknown unit '{unit}' - don't know how to translate it to http://www.qudt.org/qudt/owl/1.0.0/unit/Instances.html");
         }
 
         /// <summary>
@@ -208,6 +249,8 @@ namespace FinalStatePatternLib
             wr.WriteLine("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
             wr.WriteLine("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .");
             wr.WriteLine("@prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .");
+            wr.WriteLine("@prefix qudt: < http://qudt.org/1.1/schema/qudt#> .");
+            wr.WriteLine("@prefix unit: < http://qudt.org/1.1/vocab/unit#> .");
         }
 
         /// <summary>
