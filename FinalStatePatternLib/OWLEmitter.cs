@@ -190,6 +190,20 @@ namespace FinalStatePatternLib
         }
 
         /// <summary>
+        /// This will emit the headers required for OWL data.
+        /// </summary>
+        /// <param name="wr"></param>
+        public static void EmitHeaders(TextWriter wr)
+        {
+            wr.WriteLine("@prefix owl: <http://www.w3.org/2002/07/owl#> .");
+            wr.WriteLine("@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .");
+            wr.WriteLine("@prefix xml: <http://www.w3.org/XML/1998/namespace> .");
+            wr.WriteLine("@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .");
+            wr.WriteLine("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .");
+            wr.WriteLine("@prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .");
+        }
+
+        /// <summary>
         /// Emit all kinds of selection
         /// </summary>
         /// <param name="sb"></param>

@@ -37,6 +37,8 @@ namespace ParseSingleDFS
             {
                 var dfs = text.Parse();
 
+                OWLEmitter.EmitHeaders(Console.Out);
+                Console.WriteLine();
                 dfs.Emit(Console.Out);
             } catch (Exception e)
             {
