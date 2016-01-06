@@ -11,7 +11,7 @@ namespace FinalStatePatternLib.Listeners
     /// Main listener for the grammar parsing.
     /// </summary>
     /// <remarks>
-    /// Since we want to accumulate everything, rather than calculate, the listener seems to be a better choice than a vistior.
+    /// Since we want to accumulate everything, rather than calculate, the listener seems to be a better choice than a visitor.
     /// Especially considering the different types that are floating around.
     /// However, it does mean that there will be lots of global variables implemented as instance variables in here.
     /// </remarks>
@@ -29,7 +29,7 @@ namespace FinalStatePatternLib.Listeners
 
         /// <summary>
         /// A new object specification line has been built. Record it and add it to our overall list.
-        /// No cuts are applied at this time in the grammer parsing.
+        /// No cuts are applied at this time in the grammar parsing.
         /// </summary>
         /// <param name="context"></param>
         public override void ExitObjectSpecNameOnly(FinalStatePatternParser.ObjectSpecNameOnlyContext context)
@@ -66,7 +66,7 @@ namespace FinalStatePatternLib.Listeners
 
             TopLevelCriteria.AddRange(_current_criteria.Pop());
 
-            // Any downlevel processing.
+            // Any down level processing.
             base.ExitObjectSpecNameAndCutList(context);
         }
 
@@ -200,7 +200,7 @@ namespace FinalStatePatternLib.Listeners
         }
 
         /// <summary>
-        /// Type type of FSO reference we are converting. In one case, if it is defined twice, it must be the same!
+        /// Type of FSO reference we are converting. In one case, if it is defined twice, it must be the same!
         /// </summary>
         enum AllowedFSODefinitionReference
         {
@@ -254,7 +254,7 @@ namespace FinalStatePatternLib.Listeners
                 fso = _current_cut;
             }
 
-            // See if the fso was explicitly defined.
+            // See if the FSO was explicitly defined.
             if (func.object_name() != null)
             {
                 fso = Convert(func.object_name(), AllowedFSODefinitionReference.kAsDefinitionOrReference);
@@ -262,11 +262,11 @@ namespace FinalStatePatternLib.Listeners
 
             if (fso == null)
             {
-                throw new ArgumentException(string.Format("Unable to figure out what object this value is refering to: {0}", func.NAME().GetText()));
+                throw new ArgumentException(string.Format("Unable to figure out what object this value is referring to: {0}", func.NAME().GetText()));
             }
 
             // It is possible to have a name like ETMiss as a stand-alone name.
-            // However, then the fso must be defined.
+            // However, then the FSO must be defined.
             // (see above)... And we really need to double check this.
             // TODO: Alias mechanism so ETMiss => ETMiss.ET or similar?
             // Or we can use MET or something like that - so most physicists will
@@ -301,7 +301,7 @@ namespace FinalStatePatternLib.Listeners
         /// <returns></returns>
         private IValueBase Convert(FinalStatePatternParser.FunctionContext functionContext)
         {
-            // All the arguments are either on the stack as selection criteria or burried deep.
+            // All the arguments are either on the stack as selection criteria or buried deep.
             var allObjectsInContext =
                 functionContext.function_arg()
                 .SelectMany(fa => ExtractFSOReferences(fa));
@@ -407,7 +407,7 @@ namespace FinalStatePatternLib.Listeners
             }
             else
             {
-                throw new InvalidOperationException("Unknown selectrion criteria");
+                throw new InvalidOperationException("Unknown selection criteria");
             }
         }
 

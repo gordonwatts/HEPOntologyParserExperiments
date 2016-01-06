@@ -18,7 +18,7 @@ namespace FinalStatePatternLib.OWLData
         public ANDOR Criteria { get; private set; }
 
         /// <summary>
-        /// Basic ctor
+        /// Basic constructor
         /// </summary>
         public DetectorFinalState()
         {

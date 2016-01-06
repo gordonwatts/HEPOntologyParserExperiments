@@ -56,7 +56,7 @@ namespace FinalStatePatternLib
         private class ErrorRecorder : IAntlrErrorListener<IToken>
         {
             /// <summary>
-            /// List of error messages that have occured.
+            /// List of error messages that have occurred.
             /// </summary>
             public List<string> Errors = new List<string>();
 

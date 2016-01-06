@@ -407,8 +407,8 @@ namespace t_FinalStatePatternLib
         [TestMethod]
         public void FunctionInObjSpecification()
         {
-            // TODO: (WARNING) - this works, but DR might be a funciton argument, not an argument
-            // of J2 - the parser needs to know more than symantics... it needs a model to help
+            // TODO: (WARNING) - this works, but DR might be a function argument, not an argument
+            // of J2 - the parser needs to know more than semantics... it needs a model to help
             // understand what is going on here.
 
             var text = "J2(atlas-jet) : NTrack(J2.pT > 30 GeV, DR=0.2, pT>1) = 0;";

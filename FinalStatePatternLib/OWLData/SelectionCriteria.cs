@@ -2,7 +2,7 @@
 namespace FinalStatePatternLib.OWLData
 {
     /// <summary>
-    /// Represents a standard comparions or selection criteria.
+    /// Represents a standard comparisons or selection criteria.
     /// </summary>
     public class SelectionCriteria : ISelectionCriteriaBase
     {

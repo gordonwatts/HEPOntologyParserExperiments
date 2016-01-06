@@ -8,7 +8,7 @@ namespace FinalStatePatternLib
     public static class OWLEmitter
     {
         /// <summary>
-        /// Emit a fso
+        /// Emit a FSO
         /// </summary>
         /// <param name="fso"></param>
         /// <param name="wr"></param>

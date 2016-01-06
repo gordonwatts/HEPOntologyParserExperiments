@@ -8,7 +8,7 @@ namespace FinalStatePatternLib.OWLData
         kUnknown
     }
     /// <summary>
-    /// Contians the info for a final state object
+    /// Contains the info for a final state object
     /// </summary>
     public class FinalStateObject
     {
@@ -18,7 +18,7 @@ namespace FinalStatePatternLib.OWLData
         public string Name;
 
         /// <summary>
-        /// The base defintion
+        /// The base definition
         /// </summary>
         /// <remarks>Can be null
         /// Something like "atlas-kt4-jet" or similar</remarks>
@@ -30,7 +30,7 @@ namespace FinalStatePatternLib.OWLData
         FinalStateObjectTypes ObjectType;
 
         /// <summary>
-        /// Create an empy FSO.
+        /// Create an empty FSO.
         /// </summary>
         public FinalStateObject()
         {
