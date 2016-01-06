@@ -51,213 +51,225 @@ Here is the DSL it does parse:
 The OWL dump for this looks like the following:
 
 ```
-<#J1> rdf:type dfs:PhysicsObject ;
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .
+@prefix qudt: < http://qudt.org/1.1/schema/qudt#> .
+@prefix unit: < http://qudt.org/1.1/vocab/unit#> .
+
+atlas:J1 rdf:type dfs:PhysicsObject ;
   hasBaseDefinition: "anti-kt-04" .
 
-<#J2> rdf:type dfs:PhysicsObject ;
+atlas:J2 rdf:type dfs:PhysicsObject ;
   hasBaseDefinition: "anti-kt-04" .
 
-<#PV1> rdf:type dfs:PhysicsObject ;
+atlas:PV1 rdf:type dfs:PhysicsObject ;
   hasBaseDefinition: "primary-vertex" .
 
-<#ETMiss> rdf:type dfs:PhysicsObject ;
+atlas:ETMiss rdf:type dfs:PhysicsObject ;
   hasBaseDefinition: "atlas-ref" .
 
-<#physicalQuantity0> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> ;
-  dfs:hasQuantity dfs:et .
+atlas:physicalQuantity0 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 ;
+  dfs:refersToFinalStateObjectProperty dfs:et .
 
-<#number1> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "60"^^xsd:decimal ;
-  dfs:hasUnit dfs:GeV .
+atlas:number1 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "60"^^xsd:decimal ;
+  qudt:unit unit:GigaElectronVolt .
 
-<#selectionCriteria2> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria2 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:greaterThan ;
-  dfs:hasFirstArgument <#physicalQuantity0> ;
-  dfs:hasSecondArgument <#number1> .
+  dfs:hasFirstArgument atlas:physicalQuantity0 ;
+  dfs:hasSecondArgument atlas:number1 .
 
-<#physicalQuantity3> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> ;
-  dfs:hasQuantity dfs:abseta .
+atlas:physicalQuantity3 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 ;
+  dfs:refersToFinalStateObjectProperty dfs:abseta .
 
-<#number4> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "2.5"^^xsd:decimal .
+atlas:number4 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "2.5"^^xsd:decimal .
 
-<#selectionCriteria5> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria5 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity3> ;
-  dfs:hasSecondArgument <#number4> .
+  dfs:hasFirstArgument atlas:physicalQuantity3 ;
+  dfs:hasSecondArgument atlas:number4 .
 
-<#physicalQuantity6> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> ;
-  dfs:hasQuantity dfs:EMF .
+atlas:physicalQuantity6 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 ;
+  dfs:refersToFinalStateObjectProperty dfs:EMF .
 
-<#number7> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "0.02"^^xsd:decimal .
+atlas:number7 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "0.02"^^xsd:decimal .
 
-<#selectionCriteria8> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria8 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity6> ;
-  dfs:hasSecondArgument <#number7> .
+  dfs:hasFirstArgument atlas:physicalQuantity6 ;
+  dfs:hasSecondArgument atlas:number7 .
 
-<#number9> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "-1"^^xsd:decimal ;
-  dfs:hasUnit dfs:ns .
+atlas:number9 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "-1E-09"^^xsd:decimal ;
+  qudt:unit unit:SecondTime .
 
-<#physicalQuantity10> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> ;
-  dfs:hasQuantity dfs:ArrivalTime .
+atlas:physicalQuantity10 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 ;
+  dfs:refersToFinalStateObjectProperty dfs:ArrivalTime .
 
-<#selectionCriteria11> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria11 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#number9> ;
-  dfs:hasSecondArgument <#physicalQuantity10> .
+  dfs:hasFirstArgument atlas:number9 ;
+  dfs:hasSecondArgument atlas:physicalQuantity10 .
 
-<#physicalQuantity12> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> ;
-  dfs:hasQuantity dfs:ArrivalTime .
+atlas:physicalQuantity12 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 ;
+  dfs:refersToFinalStateObjectProperty dfs:ArrivalTime .
 
-<#number13> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "5"^^xsd:decimal ;
-  dfs:hasUnit dfs:ns .
+atlas:number13 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "5E-09"^^xsd:decimal ;
+  qudt:unit unit:SecondTime .
 
-<#selectionCriteria14> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria14 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity12> ;
-  dfs:hasSecondArgument <#number13> .
+  dfs:hasFirstArgument atlas:physicalQuantity12 ;
+  dfs:hasSecondArgument atlas:number13 .
 
-<#physicalQuantity15> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> ;
-  dfs:hasQuantity dfs:et .
+atlas:physicalQuantity15 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 ;
+  dfs:refersToFinalStateObjectProperty dfs:et .
 
-<#number16> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "40"^^xsd:decimal ;
-  dfs:hasUnit dfs:GeV .
+atlas:number16 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "40"^^xsd:decimal ;
+  qudt:unit unit:GigaElectronVolt .
 
-<#selectionCriteria17> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria17 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:greaterThan ;
-  dfs:hasFirstArgument <#physicalQuantity15> ;
-  dfs:hasSecondArgument <#number16> .
+  dfs:hasFirstArgument atlas:physicalQuantity15 ;
+  dfs:hasSecondArgument atlas:number16 .
 
-<#physicalQuantity18> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> ;
-  dfs:hasQuantity dfs:abseta .
+atlas:physicalQuantity18 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 ;
+  dfs:refersToFinalStateObjectProperty dfs:abseta .
 
-<#number19> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "2.5"^^xsd:decimal .
+atlas:number19 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "2.5"^^xsd:decimal .
 
-<#selectionCriteria20> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria20 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity18> ;
-  dfs:hasSecondArgument <#number19> .
+  dfs:hasFirstArgument atlas:physicalQuantity18 ;
+  dfs:hasSecondArgument atlas:number19 .
 
-<#physicalQuantity21> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> ;
-  dfs:hasQuantity dfs:EMF .
+atlas:physicalQuantity21 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 ;
+  dfs:refersToFinalStateObjectProperty dfs:EMF .
 
-<#number22> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "0.02"^^xsd:decimal .
+atlas:number22 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "0.02"^^xsd:decimal .
 
-<#selectionCriteria23> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria23 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity21> ;
-  dfs:hasSecondArgument <#number22> .
+  dfs:hasFirstArgument atlas:physicalQuantity21 ;
+  dfs:hasSecondArgument atlas:number22 .
 
-<#number24> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "-1"^^xsd:decimal ;
-  dfs:hasUnit dfs:ns .
+atlas:number24 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "-1E-09"^^xsd:decimal ;
+  qudt:unit unit:SecondTime .
 
-<#physicalQuantity25> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> ;
-  dfs:hasQuantity dfs:ArrivalTime .
+atlas:physicalQuantity25 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 ;
+  dfs:refersToFinalStateObjectProperty dfs:ArrivalTime .
 
-<#selectionCriteria26> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria26 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#number24> ;
-  dfs:hasSecondArgument <#physicalQuantity25> .
+  dfs:hasFirstArgument atlas:number24 ;
+  dfs:hasSecondArgument atlas:physicalQuantity25 .
 
-<#physicalQuantity27> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> ;
-  dfs:hasQuantity dfs:ArrivalTime .
+atlas:physicalQuantity27 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 ;
+  dfs:refersToFinalStateObjectProperty dfs:ArrivalTime .
 
-<#number28> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "5"^^xsd:decimal ;
-  dfs:hasUnit dfs:ns .
+atlas:number28 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "5E-09"^^xsd:decimal ;
+  qudt:unit unit:SecondTime .
 
-<#selectionCriteria29> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria29 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity27> ;
-  dfs:hasSecondArgument <#number28> .
+  dfs:hasFirstArgument atlas:physicalQuantity27 ;
+  dfs:hasSecondArgument atlas:number28 .
 
-<#physicalQuantity30> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#PV1> ;
-  dfs:hasQuantity dfs:NTrack .
+atlas:physicalQuantity30 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:PV1 ;
+  dfs:refersToFinalStateObjectProperty dfs:NTrack .
 
-<#number31> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "3"^^xsd:decimal .
+atlas:number31 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "3"^^xsd:decimal .
 
-<#selectionCriteria32> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria32 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:greaterEqual ;
-  dfs:hasFirstArgument <#physicalQuantity30> ;
-  dfs:hasSecondArgument <#number31> .
+  dfs:hasFirstArgument atlas:physicalQuantity30 ;
+  dfs:hasSecondArgument atlas:number31 .
 
-<#physicalQuantity33> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#PV1> ;
-  dfs:hasQuantity dfs:pT .
+atlas:physicalQuantity33 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:PV1 ;
+  dfs:refersToFinalStateObjectProperty dfs:pT .
 
-<#number34> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "1"^^xsd:decimal ;
-  dfs:hasUnit dfs:GeV .
+atlas:number34 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "1"^^xsd:decimal ;
+  qudt:unit unit:GigaElectronVolt .
 
-<#selectionCriteria35> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria35 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:greaterThan ;
-  dfs:hasFirstArgument <#physicalQuantity33> ;
-  dfs:hasSecondArgument <#number34> .
+  dfs:hasFirstArgument atlas:physicalQuantity33 ;
+  dfs:hasSecondArgument atlas:number34 .
 
-<#functionQuantity36> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J1> , <#FuncArgNTrack> ;
+atlas:functionQuantity36 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J1 , atlas:FuncArgNTrack ;
   dfs:hasQuantity "NTrack(J1, DR=0.2, pT>1)" .
 
-<#number37> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "0"^^xsd:decimal .
+atlas:number37 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "0"^^xsd:decimal .
 
-<#selectionCriteria38> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria38 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:equal ;
-  dfs:hasFirstArgument <#functionQuantity36> ;
-  dfs:hasSecondArgument <#number37> .
+  dfs:hasFirstArgument atlas:functionQuantity36 ;
+  dfs:hasSecondArgument atlas:number37 .
 
-<#functionQuantity39> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#J2> , <#FuncArgNTrack> ;
+atlas:functionQuantity39 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:J2 , atlas:FuncArgNTrack ;
   dfs:hasQuantity "NTrack(J2, DR=0.2, pT>1)" .
 
-<#number40> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "0"^^xsd:decimal .
+atlas:number40 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "0"^^xsd:decimal .
 
-<#selectionCriteria41> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria41 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:equal ;
-  dfs:hasFirstArgument <#functionQuantity39> ;
-  dfs:hasSecondArgument <#number40> .
+  dfs:hasFirstArgument atlas:functionQuantity39 ;
+  dfs:hasSecondArgument atlas:number40 .
 
-<#physicalQuantity42> rdf:type dfs:PhysicalQuantity ;
-  dfs:refersToObject <#ETMiss> ;
-  dfs:hasQuantity dfs: .
+atlas:physicalQuantity42 rdf:type dfs:PhysicalQuantity ;
+  dfs:refersToObject atlas:ETMiss ;
+  dfs:refersToFinalStateObjectProperty dfs: .
 
-<#number43> rdf:type dfs:NumericalValue ;
-  dfs:hasNumber "50"^^xsd:decimal ;
-  dfs:hasUnit dfs:GeV .
+atlas:number43 rdf:type qudt:QuantityValue ;
+  qudt:numericValue "50"^^xsd:decimal ;
+  qudt:unit unit:GigaElectronVolt .
 
-<#selectionCriteria44> rdf:type dfs:SelectionCriteria ;
+atlas:selectionCriteria44 rdf:type dfs:SelectionCriteria ;
   dfs:usesBinaryRelation dfs:lessThan ;
-  dfs:hasFirstArgument <#physicalQuantity42> ;
-  dfs:hasSecondArgument <#number43> .
+  dfs:hasFirstArgument atlas:physicalQuantity42 ;
+  dfs:hasSecondArgument atlas:number43 .
 
-<#andor45> rdf:type dfs:And ;
-  dfs:hasOperand <#selectionCriteria2> , <#selectionCriteria5> , <#selectionCriteria8> , <#selectionCriteria11> , <#selectionCriteria14> , <#selection
-Criteria17> , <#selectionCriteria20> , <#selectionCriteria23> , <#selectionCriteria26> , <#selectionCriteria29> , <#selectionCriteria32> , <#selection
-Criteria35> , <#selectionCriteria38> , <#selectionCriteria41> , <#selectionCriteria44> .
+atlas:andor45 rdf:type dfs:And ;
+  dfs:hasOperand atlas:selectionCriteria2 , atlas:selectionCriteria5 , atlas:selectionCriteria8 , atlas:selectionCriteria11 ,
+  atlas:selectionCriteria14 , atlas:selectionCriteria17 , atlas:selectionCriteria20 , atlas:selectionCriteria23 , 
+  atlas:selectionCriteria26 , atlas:selectionCriteria29 , atlas:selectionCriteria32 , atlas:selectionCriteria35 , 
+  atlas:selectionCriteria38 , atlas:selectionCriteria41 , atlas:selectionCriteria44 .
 
-<#detectorFinalState46> rdf:type dfs:DetectorFinalState ;
-  dfs:hasSelectionCriteria <#andor45> .
+atlas:detectorFinalState46 rdf:type dfs:DetectorFinalState ;
+  dfs:hasSelectionCriteria atlas:andor45 .
+
+
 
 ```
 
