@@ -22,7 +22,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fso.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#hi> rdf:type dfs:PhysicsObject .", text);
+            Assert.AreEqual("atlas:hi rdf:type dfs:PhysicsObject .", text);
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fso.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#hi> rdf:type dfs:PhysicsObject ;\r\n  hasBaseDefinition: \"fork\" .", text);
+            Assert.AreEqual("atlas:hi rdf:type dfs:PhysicsObject ;\r\n  hasBaseDefinition: \"fork\" .", text);
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             pn.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal .", text);
+            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal .", text);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             pn.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal ;\r\n  dfs:hasUnit dfs:GeV .", text);
+            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;\r\n  dfs:hasNumber \"55\"^^xsd:decimal ;\r\n  dfs:hasUnit dfs:GeV .", text);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             spq.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#physicalQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> ;\r\n  dfs:hasQuantity dfs:pT .", text);
+            Assert.AreEqual("atlas:physicalQuantity0 rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject atlas:J1 ;\r\n  dfs:hasQuantity dfs:pT .", text);
         }
 
         [TestMethod]
@@ -75,7 +75,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fpv.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("<#functionQuantity0> rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject <#J1> , <#J2> ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
+            Assert.AreEqual("atlas:functionQuantity0 rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject atlas:J1 , atlas:J2 ;\r\n  dfs:hasQuantity \"NTrack(J1.pT > 20, ET > 0, J2)\" .", text);
         }
 
         [TestMethod]
@@ -92,17 +92,17 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             sc.Emit(ms);
             var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
-            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;", text[0]);
+            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;", text[0]);
             Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
             Assert.AreEqual("", text[2]);
-            Assert.AreEqual("<#number1> rdf:type dfs:NumericalValue ;", text[3]);
+            Assert.AreEqual("atlas:number1 rdf:type dfs:NumericalValue ;", text[3]);
             Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
             Assert.AreEqual("", text[5]);
 
-            Assert.AreEqual("<#selectionCriteria2> rdf:type dfs:SelectionCriteria ;", text[6]);
+            Assert.AreEqual("atlas:selectionCriteria2 rdf:type dfs:SelectionCriteria ;", text[6]);
             Assert.AreEqual("dfs:usesBinaryRelation dfs:greaterThan ;", text[7]);
-            Assert.AreEqual("dfs:hasFirstArgument <#number0> ;", text[8]);
-            Assert.AreEqual("dfs:hasSecondArgument <#number1> .", text[9]);
+            Assert.AreEqual("dfs:hasFirstArgument atlas:number0 ;", text[8]);
+            Assert.AreEqual("dfs:hasSecondArgument atlas:number1 .", text[9]);
         }
 
         [TestMethod]
@@ -137,34 +137,34 @@ namespace t_FinalStatePatternLib
             andor.Emit(ms);
             var text = ms.ToString().Split('\r').Select(l => l.Trim()).ToArray();
 
-            Assert.AreEqual("<#number0> rdf:type dfs:NumericalValue ;", text[0]);
+            Assert.AreEqual("atlas:number0 rdf:type dfs:NumericalValue ;", text[0]);
             Assert.AreEqual("dfs:hasNumber \"51\"^^xsd:decimal .", text[1]);
             Assert.AreEqual("", text[2]);
-            Assert.AreEqual("<#number1> rdf:type dfs:NumericalValue ;", text[3]);
+            Assert.AreEqual("atlas:number1 rdf:type dfs:NumericalValue ;", text[3]);
             Assert.AreEqual("dfs:hasNumber \"52\"^^xsd:decimal .", text[4]);
             Assert.AreEqual("", text[5]);
 
-            Assert.AreEqual("<#selectionCriteria2> rdf:type dfs:SelectionCriteria ;", text[6]);
+            Assert.AreEqual("atlas:selectionCriteria2 rdf:type dfs:SelectionCriteria ;", text[6]);
             Assert.AreEqual("dfs:usesBinaryRelation dfs:greaterThan ;", text[7]);
-            Assert.AreEqual("dfs:hasFirstArgument <#number0> ;", text[8]);
-            Assert.AreEqual("dfs:hasSecondArgument <#number1> .", text[9]);
+            Assert.AreEqual("dfs:hasFirstArgument atlas:number0 ;", text[8]);
+            Assert.AreEqual("dfs:hasSecondArgument atlas:number1 .", text[9]);
             Assert.AreEqual("", text[10]);
 
-            Assert.AreEqual("<#number3> rdf:type dfs:NumericalValue ;", text[11]);
+            Assert.AreEqual("atlas:number3 rdf:type dfs:NumericalValue ;", text[11]);
             Assert.AreEqual("dfs:hasNumber \"53\"^^xsd:decimal .", text[12]);
             Assert.AreEqual("", text[13]);
-            Assert.AreEqual("<#number4> rdf:type dfs:NumericalValue ;", text[14]);
+            Assert.AreEqual("atlas:number4 rdf:type dfs:NumericalValue ;", text[14]);
             Assert.AreEqual("dfs:hasNumber \"54\"^^xsd:decimal .", text[15]);
             Assert.AreEqual("", text[16]);
 
-            Assert.AreEqual("<#selectionCriteria5> rdf:type dfs:SelectionCriteria ;", text[17]);
+            Assert.AreEqual("atlas:selectionCriteria5 rdf:type dfs:SelectionCriteria ;", text[17]);
             Assert.AreEqual("dfs:usesBinaryRelation dfs:lessThan ;", text[18]);
-            Assert.AreEqual("dfs:hasFirstArgument <#number3> ;", text[19]);
-            Assert.AreEqual("dfs:hasSecondArgument <#number4> .", text[20]);
+            Assert.AreEqual("dfs:hasFirstArgument atlas:number3 ;", text[19]);
+            Assert.AreEqual("dfs:hasSecondArgument atlas:number4 .", text[20]);
             Assert.AreEqual("", text[21]);
 
-            Assert.AreEqual("<#andor6> rdf:type dfs:And ;", text[22]);
-            Assert.AreEqual("dfs:hasOperand <#selectionCriteria2> , <#selectionCriteria5> .", text[23]);
+            Assert.AreEqual("atlas:andor6 rdf:type dfs:And ;", text[22]);
+            Assert.AreEqual("dfs:hasOperand atlas:selectionCriteria2 , atlas:selectionCriteria5 .", text[23]);
 
         }
     }

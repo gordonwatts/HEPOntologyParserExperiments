@@ -8,13 +8,19 @@ namespace FinalStatePatternLib
     public static class OWLEmitter
     {
         /// <summary>
+        /// Namespace we should be using for this emitter
+        /// </summary>
+        const string OWLNamespace = "atlas";
+
+        /// <summary>
         /// Emit a FSO
         /// </summary>
         /// <param name="fso"></param>
         /// <param name="wr"></param>
         public static string Emit(this FinalStateObject fso, TextWriter wr)
         {
-            wr.WriteLine("<#{0}> rdf:type dfs:PhysicsObject {1}", fso.Name, fso.BaseDefinition == null ? "." : ";");
+            var lineEnding = fso.BaseDefinition == null ? "." : ";";
+            wr.WriteLine($"{OWLNamespace}:{fso.Name} rdf:type dfs:PhysicsObject {lineEnding}");
             if (fso.BaseDefinition != null)
                 wr.WriteLine("  hasBaseDefinition: \"{0}\" .", fso.BaseDefinition);
             return fso.Name;
@@ -29,8 +35,8 @@ namespace FinalStatePatternLib
         public static string Emit(this PhysicalValue pv, TextWriter wr)
         {
             var name = MakeName("number");
-            wr.WriteLine("<#{0}> rdf:type dfs:NumericalValue ;", name);
-            wr.Write("  dfs:hasNumber \"{0}\"^^xsd:decimal ", pv.Number);
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:NumericalValue ;");
+            wr.Write($"  dfs:hasNumber \"{pv.Number}\"^^xsd:decimal ");
             if (pv.Unit == null)
             {
                 wr.WriteLine(".");
@@ -38,7 +44,7 @@ namespace FinalStatePatternLib
             else
             {
                 wr.WriteLine(";");
-                wr.WriteLine("  dfs:hasUnit dfs:{0} .", pv.Unit);
+                wr.WriteLine($"  dfs:hasUnit dfs:{pv.Unit} .");
             }
             return name;
         }
@@ -52,9 +58,9 @@ namespace FinalStatePatternLib
         public static string Emit(this SinglePhysicalQuantity pv, TextWriter wr)
         {
             var name = MakeName("physicalQuantity");
-            wr.WriteLine("<#{0}> rdf:type dfs:PhysicalQuantity ;", name);
-            wr.WriteLine("  dfs:refersToObject <#{0}> ;", pv.RefersToObject.Name);
-            wr.WriteLine("  dfs:hasQuantity dfs:{0} .", pv.PhysicalQantity);
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:PhysicalQuantity ;");
+            wr.WriteLine($"  dfs:refersToObject {OWLNamespace}:{pv.RefersToObject.Name} ;");
+            wr.WriteLine($"  dfs:hasQuantity dfs:{pv.PhysicalQantity} .");
             return name;
         }
 
@@ -67,7 +73,7 @@ namespace FinalStatePatternLib
         public static string Emit(this FunctionPhysicalQuantity fv, TextWriter wr)
         {
             var name = MakeName("functionQuantity");
-            wr.WriteLine("<#{0}> rdf:type dfs:PhysicalQuantity ;", name);
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:PhysicalQuantity ;");
             wr.Write("  dfs:refersToObject ");
             bool first = true;
             foreach (var q in fv.RefersToObjects)
@@ -77,10 +83,10 @@ namespace FinalStatePatternLib
                     wr.Write(" , ");
                 }
                 first = false;
-                wr.Write("<#{0}>", q.Name);
+                wr.Write($"{OWLNamespace}:{q.Name}");
             }
             wr.WriteLine(" ;");
-            wr.WriteLine("  dfs:hasQuantity \"{0}({1})\" .", fv.Name, fv.ArgumentList);
+            wr.WriteLine($"  dfs:hasQuantity \"{fv.Name}({fv.ArgumentList})\" .");
             return name;
         }
 
@@ -106,7 +112,7 @@ namespace FinalStatePatternLib
             }
             else
             {
-                throw new ArgumentException(string.Format("Do not know how to emit type '{0}'", v.GetType().Name));
+                throw new ArgumentException($"Do not know how to emit type '{v.GetType().Name}'");
             }
         }
 
@@ -124,10 +130,10 @@ namespace FinalStatePatternLib
             wr.WriteLine();
 
             var name = MakeName("selectionCriteria");
-            wr.WriteLine("<#{0}> rdf:type dfs:SelectionCriteria ;", name);
-            wr.WriteLine("  dfs:usesBinaryRelation dfs:{0} ;", AsDFSBinaryRelation(sc.BinaryRelation));
-            wr.WriteLine("  dfs:hasFirstArgument <#{0}> ;", n1);
-            wr.WriteLine("  dfs:hasSecondArgument <#{0}> .", n2);
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:SelectionCriteria ;", name);
+            wr.WriteLine($"  dfs:usesBinaryRelation dfs:{AsDFSBinaryRelation(sc.BinaryRelation)} ;");
+            wr.WriteLine($"  dfs:hasFirstArgument {OWLNamespace}:{n1} ;");
+            wr.WriteLine($"  dfs:hasSecondArgument {OWLNamespace}:{n2} .");
             return name;
         }
 
@@ -151,7 +157,8 @@ namespace FinalStatePatternLib
 
             // Next our body.
             var name = MakeName("andor");
-            wr.WriteLine("<#{0}> rdf:type dfs:{1} ;", name, andor.AOType == ANDORType.kAnd ? "And" : "Or");
+            var andorname = andor.AOType == ANDORType.kAnd ? "And" : "Or";
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:{andorname} ;");
             wr.Write("  dfs:hasOperand ");
             bool first = true;
             foreach (var a in criteria)
@@ -159,7 +166,7 @@ namespace FinalStatePatternLib
                 if (!first)
                     wr.Write(" , ");
                 first = false;
-                wr.Write("<#{0}>", a);
+                wr.Write($"{OWLNamespace}:{a}");
             }
             wr.WriteLine(" .");
 
@@ -183,8 +190,8 @@ namespace FinalStatePatternLib
             wr.WriteLine();
 
             var name = MakeName("detectorFinalState");
-            wr.WriteLine("<#{0}> rdf:type dfs:DetectorFinalState ;", name);
-            wr.WriteLine("  dfs:hasSelectionCriteria <#{0}> .", sname);
+            wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:DetectorFinalState ;");
+            wr.WriteLine($"  dfs:hasSelectionCriteria {OWLNamespace}:{sname} .");
 
             return name;
         }
