@@ -63,7 +63,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             spq.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("atlas:physicalQuantity0 rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject atlas:J1 ;\r\n  dfs:hasQuantity dfs:pT .", text);
+            Assert.AreEqual("atlas:physicalQuantity0 rdf:type dfs:PhysicalQuantity ;\r\n  dfs:refersToObject atlas:J1 ;\r\n  dfs:refersToFinalStateObjectProperty dfs:pT .", text);
         }
 
         [TestMethod]

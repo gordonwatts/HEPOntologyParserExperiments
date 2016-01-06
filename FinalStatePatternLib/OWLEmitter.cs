@@ -60,7 +60,7 @@ namespace FinalStatePatternLib
             var name = MakeName("physicalQuantity");
             wr.WriteLine($"{OWLNamespace}:{name} rdf:type dfs:PhysicalQuantity ;");
             wr.WriteLine($"  dfs:refersToObject {OWLNamespace}:{pv.RefersToObject.Name} ;");
-            wr.WriteLine($"  dfs:hasQuantity dfs:{pv.PhysicalQantity} .");
+            wr.WriteLine($"  dfs:refersToFinalStateObjectProperty dfs:{pv.PhysicalQantity} .");
             return name;
         }
 
