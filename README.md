@@ -260,3 +260,11 @@ Criteria35> , <#selectionCriteria38> , <#selectionCriteria41> , <#selectionCrite
   dfs:hasSelectionCriteria <#andor45> .
 
 ```
+
+# Development
+
+The environment for devleopment is easy to setup:
+
+1. Use Visual Stuido 2015 Community Edition (Free). It may work with older versions, like 2013, but primary development isn't done there.
+
+2. Install the Java Runtime. No need for browser integration. This is needed for the ANTLR code, which uses java to produce the parser.
