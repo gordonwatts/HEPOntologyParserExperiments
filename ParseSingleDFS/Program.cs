@@ -1,6 +1,7 @@
 ﻿using FinalStatePatternLib;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace ParseSingleDFS
 {
@@ -26,7 +27,10 @@ namespace ParseSingleDFS
             var text = "";
             using (var reader = f.OpenText())
             {
-                text = reader.ReadToEnd();
+                text = reader
+                    .AsEnumerable()
+                    .Where(l => !l.StartsWith("#") && !string.IsNullOrWhiteSpace(l))
+                    .ReadAllLines();
             }
 
             try
