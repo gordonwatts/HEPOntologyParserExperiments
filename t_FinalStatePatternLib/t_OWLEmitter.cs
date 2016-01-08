@@ -32,7 +32,7 @@ namespace t_FinalStatePatternLib
             var ms = new StringWriter();
             fso.Emit(ms);
             var text = ms.ToString().Trim();
-            Assert.AreEqual("atlas:hi rdf:type dfs:PhysicsObject ;\r\n  hasBaseDefinition: \"fork\" .", text);
+            Assert.AreEqual("atlas:hi rdf:type dfs:PhysicsObject ;\r\n  dfs:hasBaseDefinition \"fork\" .", text);
         }
 
         [TestMethod]

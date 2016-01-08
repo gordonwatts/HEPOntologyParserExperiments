@@ -22,7 +22,7 @@ namespace FinalStatePatternLib
             var lineEnding = fso.BaseDefinition == null ? "." : ";";
             wr.WriteLine($"{OWLNamespace}:{fso.Name} rdf:type dfs:PhysicsObject {lineEnding}");
             if (fso.BaseDefinition != null)
-                wr.WriteLine("  hasBaseDefinition: \"{0}\" .", fso.BaseDefinition);
+                wr.WriteLine("  dfs:hasBaseDefinition \"{0}\" .", fso.BaseDefinition);
             return fso.Name;
         }
 
