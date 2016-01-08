@@ -59,18 +59,19 @@ The OWL dump for this looks like the following:
 @prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .
 @prefix qudt: < http://qudt.org/1.1/schema/qudt#> .
 @prefix unit: < http://qudt.org/1.1/vocab/unit#> .
+@base <http://example.org/ns/> .
 
 atlas:J1 rdf:type dfs:PhysicsObject ;
-  hasBaseDefinition: "anti-kt-04" .
+  dfs:hasBaseDefinition "anti-kt-04" .
 
 atlas:J2 rdf:type dfs:PhysicsObject ;
-  hasBaseDefinition: "anti-kt-04" .
+  dfs:hasBaseDefinition "anti-kt-04" .
 
 atlas:PV1 rdf:type dfs:PhysicsObject ;
-  hasBaseDefinition: "primary-vertex" .
+  dfs:hasBaseDefinition "primary-vertex" .
 
 atlas:ETMiss rdf:type dfs:PhysicsObject ;
-  hasBaseDefinition: "atlas-ref" .
+  dfs:hasBaseDefinition "atlas-ref" .
 
 atlas:physicalQuantity0 rdf:type dfs:PhysicalQuantity ;
   dfs:refersToObject atlas:J1 ;
@@ -261,15 +262,12 @@ atlas:selectionCriteria44 rdf:type dfs:SelectionCriteria ;
   dfs:hasSecondArgument atlas:number43 .
 
 atlas:andor45 rdf:type dfs:And ;
-  dfs:hasOperand atlas:selectionCriteria2 , atlas:selectionCriteria5 , atlas:selectionCriteria8 , atlas:selectionCriteria11 ,
-  atlas:selectionCriteria14 , atlas:selectionCriteria17 , atlas:selectionCriteria20 , atlas:selectionCriteria23 , 
-  atlas:selectionCriteria26 , atlas:selectionCriteria29 , atlas:selectionCriteria32 , atlas:selectionCriteria35 , 
-  atlas:selectionCriteria38 , atlas:selectionCriteria41 , atlas:selectionCriteria44 .
+  dfs:hasOperand atlas:selectionCriteria2 , atlas:selectionCriteria5 , atlas:selectionCriteria8 , atlas:selectionCriteria11 , atlas:selectionCriteria14 ,
+  atlas:selectionCriteria17 , atlas:selectionCriteria20 , atlas:selectionCriteria23 , atlas:selectionCriteria26 , atlas:selectionCriteria29 , 
+  atlas:selectionCriteria32 , atlas:selectionCriteria35 , atlas:selectionCriteria38 , atlas:selectionCriteria41 , atlas:selectionCriteria44 .
 
 atlas:detectorFinalState46 rdf:type dfs:DetectorFinalState ;
   dfs:hasSelectionCriteria atlas:andor45 .
-
-
 
 ```
 
