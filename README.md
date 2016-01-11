@@ -57,8 +57,9 @@ The OWL dump for this looks like the following:
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .
-@prefix qudt: < http://qudt.org/1.1/schema/qudt#> .
-@prefix unit: < http://qudt.org/1.1/vocab/unit#> .
+@prefix qudt: <http://qudt.org/1.1/schema/qudt#> .
+@prefix unit: <http://qudt.org/1.1/vocab/unit#> .
+@prefex atlas: <http://www.atlas.ch/papers/namespace>
 @base <http://example.org/ns/> .
 
 atlas:J1 rdf:type dfs:PhysicsObject ;
