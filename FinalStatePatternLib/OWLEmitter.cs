@@ -251,7 +251,7 @@ namespace FinalStatePatternLib
             wr.WriteLine("@prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .");
             wr.WriteLine("@prefix qudt: <http://qudt.org/1.1/schema/qudt#> .");
             wr.WriteLine("@prefix unit: <http://qudt.org/1.1/vocab/unit#> .");
-            wr.WriteLine("@prefix atlas: <http://www.atlas.ch/papers/namespace>");
+            wr.WriteLine("@prefix atlas: <http://www.atlas.ch/papers/namespace> .");
             wr.WriteLine("@base <http://example.org/ns/> .");
         }
 

@@ -59,7 +59,7 @@ The OWL dump for this looks like the following:
 @prefix dfs: <https://w3id.org/daspos/detectorfinalstate#> .
 @prefix qudt: <http://qudt.org/1.1/schema/qudt#> .
 @prefix unit: <http://qudt.org/1.1/vocab/unit#> .
-@prefix atlas: <http://www.atlas.ch/papers/namespace>
+@prefix atlas: <http://www.atlas.ch/papers/namespace> .
 @base <http://example.org/ns/> .
 
 atlas:J1 rdf:type dfs:PhysicsObject ;
